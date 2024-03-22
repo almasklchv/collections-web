@@ -1,18 +1,13 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { BASE_URL } from "../consts/base-url-api";
 import { User } from "../entities/user";
+import { getHeaders } from "../utils/get-headers";
 
 export const authApi = createApi({
   reducerPath: "authApi",
   baseQuery: fetchBaseQuery({
     baseUrl: BASE_URL,
-    prepareHeaders: (headers) => {
-      const token = localStorage.getItem('token');
-      if (token) {
-        headers.set('Authorization', token)
-      }
-      return headers;
-    }
+    prepareHeaders: getHeaders,
   }),
   endpoints: (build) => ({
     signUp: build.mutation({
