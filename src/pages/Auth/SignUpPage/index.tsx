@@ -5,13 +5,20 @@ import {
   FormHelperText,
   Input,
   InputLabel,
+  Typography,
 } from "@mui/material";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { schema } from "../../../schemas/sign-up-schema";
 import { User } from "../../../entities/user";
+import { useSignUpMutation } from "../../../api/auth";
+import { useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
 
 const SignUpPage = () => {
+  const [signUp, result] = useSignUpMutation();
+  const navigate = useNavigate();
+
   const {
     register,
     handleSubmit,
@@ -21,8 +28,14 @@ const SignUpPage = () => {
   });
 
   const onSubmit: SubmitHandler<Partial<User>> = (data) => {
-    console.log(data);
+    signUp(data);
   };
+
+  useEffect(() => {
+    if (result.data) {
+      navigate("/auth/sign-in");
+    }
+  }, [result, navigate]);
 
   return (
     <Box width={350}>
@@ -80,6 +93,12 @@ const SignUpPage = () => {
         <Button variant="contained" type="submit" sx={{ marginTop: 5 }}>
           Sign Up
         </Button>
+        <Typography
+          variant="caption"
+          sx={{ margin: "0 auto", marginTop: "15px" }}
+        >
+          Already have an account? <Link to={"/auth/sign-in"}>Sign in</Link>
+        </Typography>
       </form>
     </Box>
   );

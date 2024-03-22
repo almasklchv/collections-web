@@ -5,11 +5,15 @@ import {
   FormHelperText,
   Input,
   InputLabel,
+  Typography,
 } from "@mui/material";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { schema } from "../../../schemas/sign-in-schema";
 import { User } from "../../../entities/user";
+import { useSignInMutation } from "../../../api/auth";
+import { useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
 
 const SignInPage = () => {
   const {
@@ -19,10 +23,19 @@ const SignInPage = () => {
   } = useForm({
     resolver: yupResolver(schema),
   });
+  const [signIn, result] = useSignInMutation();
+  const navigate = useNavigate();
 
-  const onSubmit: SubmitHandler<Partial<User>> = (data) => {
-    console.log(data);
+  const onSubmit: SubmitHandler<Partial<User>> = async (data) => {
+    signIn(data);
+    // localStorage.setItem(accessToken, "token");
   };
+
+  useEffect(() => {
+    if (result.data?.accessToken) {
+      localStorage.setItem("token", result.data.accessToken);
+    }
+  }, [result, navigate]);
 
   return (
     <Box width={350}>
@@ -56,6 +69,12 @@ const SignInPage = () => {
         <Button variant="contained" type="submit" sx={{ marginTop: 5 }}>
           Sign In
         </Button>
+        <Typography
+          variant="caption"
+          sx={{ margin: "0 auto", marginTop: "15px" }}
+        >
+          Don't have an account? <Link to={"/auth/sign-up"}>Create</Link>
+        </Typography>
       </form>
     </Box>
   );
