@@ -25,7 +25,7 @@ const ItemCard = ({ title, tags, userId }: Item) => {
         )}
       </CardContent>
       <CardActions>
-        <Button>Open Collection</Button>
+        <Button>Open</Button>
       </CardActions>
     </Card>
   );

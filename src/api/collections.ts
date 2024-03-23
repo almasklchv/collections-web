@@ -1,21 +1,21 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { BASE_URL } from "../consts/";
 import { getHeaders } from "../utils/get-headers";
-import { Item } from "../entities/item";
+import { Collection } from "../entities/collection";
 
-export const itemsApi = createApi({
-  reducerPath: "itemsApi",
+export const collectionsApi = createApi({
+  reducerPath: "collectionsApi",
   baseQuery: fetchBaseQuery({
     baseUrl: BASE_URL,
     prepareHeaders: getHeaders,
   }),
   endpoints: (build) => ({
-    getRecentlyAdded: build.query<Item[], null>({
+    getFiveBiggestCollections: build.query<Collection[], null>({
       query: () => ({
-        url: "/items/recent",
+        url: "/collections/big",
       }),
     }),
   }),
 });
 
-export const { useGetRecentlyAddedQuery } = itemsApi;
+export const { useGetFiveBiggestCollectionsQuery } = collectionsApi;

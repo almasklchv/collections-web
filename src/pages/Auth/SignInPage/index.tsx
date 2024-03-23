@@ -13,7 +13,7 @@ import { schema } from "../../../schemas/sign-in-schema";
 import { User } from "../../../entities/user";
 import { useSignInMutation } from "../../../api/auth";
 import { useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 const SignInPage = () => {
   const {
@@ -24,18 +24,17 @@ const SignInPage = () => {
     resolver: yupResolver(schema),
   });
   const [signIn, result] = useSignInMutation();
-  const navigate = useNavigate();
 
   const onSubmit: SubmitHandler<Partial<User>> = async (data) => {
     signIn(data);
-    // localStorage.setItem(accessToken, "token");
   };
 
   useEffect(() => {
     if (result.data?.accessToken) {
       localStorage.setItem("token", result.data.accessToken);
+      window.location.href = "/";
     }
-  }, [result, navigate]);
+  }, [result]);
 
   return (
     <Box width={350}>
