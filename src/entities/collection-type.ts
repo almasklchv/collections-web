@@ -1,7 +1,7 @@
 export enum CollectionType {
-  COINS,
-  POSTCARDS,
-  BANKNOTES,
-  PAINTING,
-  STAMPS,
+  COINS = "COINS",
+  POSTCARDS = "POSTCARDS",
+  BANKNOTES = "BANKNOTES",
+  PAINTING = "PAINTING",
+  STAMPS = "STAMPS",
 }

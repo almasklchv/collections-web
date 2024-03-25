@@ -15,7 +15,23 @@ export const collectionsApi = createApi({
         url: "/collections/big",
       }),
     }),
+    getCollectionsByUserId: build.query<Collection[], string>({
+      query: (userId: string) => ({
+        url: `/collections/${userId}`,
+      }),
+    }),
+    createCollection: build.mutation<Partial<Collection>, Collection>({
+      query: ({ ...collection }) => ({
+        url: "/collections/",
+        method: "POST",
+        body: collection,
+      }),
+    }),
   }),
 });
 
-export const { useGetFiveBiggestCollectionsQuery } = collectionsApi;
+export const {
+  useGetFiveBiggestCollectionsQuery,
+  useGetCollectionsByUserIdQuery,
+  useCreateCollectionMutation,
+} = collectionsApi;

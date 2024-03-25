@@ -15,6 +15,7 @@ const Sidebar = () => {
   const handleSignOut = () => {
     signOut(null);
     localStorage.removeItem("token");
+    localStorage.removeItem("user");
   };
 
   return (
@@ -37,10 +38,7 @@ const Sidebar = () => {
         >
           <ListItemText primary="My collections" />
         </ListItemButton>
-        <ListItemButton
-          selected={window.location.href.slice(21) === paths[2]}
-          onClick={(e) => handleListItemIndex(e, 2)}
-        >
+        <ListItemButton onClick={(e) => handleListItemIndex(e, 2)}>
           {localStorage.getItem("token") && (
             <ListItemText primary="Sign Out" onClick={handleSignOut} />
           )}

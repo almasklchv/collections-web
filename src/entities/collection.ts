@@ -6,5 +6,6 @@ export interface Collection {
   title: string;
   description: string;
   theme: CollectionType;
+  variant?: string;
   imageUrl: string | null;
 }

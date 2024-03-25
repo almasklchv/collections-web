@@ -31,12 +31,15 @@ const HomePage = () => {
           justifyContent: "space-between",
           padding: 15,
           marginLeft: 30,
+          gap: 3
         }}
       >
         {items?.map((item) => (
           <ItemCard {...item} key={item.id} />
         ))}
-
+        {!items?.length && !isItemsLoading && (
+          <Typography>No new items have been added in the last 24 hours.</Typography>
+        )}
         {isItemsLoading && <Typography>Loading...</Typography>}
       </Box>
       <Typography
@@ -56,9 +59,9 @@ const HomePage = () => {
         sx={{
           display: "flex",
           flexWrap: "wrap",
-          justifyContent: "space-between",
           padding: 15,
           marginLeft: 30,
+          gap: 3
         }}
       >
         {collections?.map((collection) => (

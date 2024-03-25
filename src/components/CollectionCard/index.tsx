@@ -7,9 +7,10 @@ import {
   Skeleton,
   Typography,
 } from "@mui/material";
-import { useGetUserQuery } from "../../api/users";
+import { useGetUserMutation } from "../../api/users";
 import { Collection } from "../../entities/collection";
 import { NO_IMAGE } from "../../consts";
+import { useEffect } from "react";
 
 const CollectionCard = ({
   userId,
@@ -17,18 +18,25 @@ const CollectionCard = ({
   description,
   imageUrl,
   theme,
+  variant,
 }: Collection) => {
-  const { data: user, isLoading } = useGetUserQuery(userId);
+  const [getUser, user] = useGetUserMutation();
+
+  useEffect(() => {
+    if (userId) getUser(userId);
+  }, []);
+
   return (
     <Card
       variant="outlined"
-      sx={{ maxWidth: 345, width: "100%", marginBottom: 5 }}
+      sx={{ maxWidth: 345, width: "100%" }}
     >
       <CardMedia sx={{ height: 170 }} image={imageUrl ?? NO_IMAGE} />
       <CardContent>
         <Typography color={"text-secondary"} gutterBottom>
-          {user?.name}
-          {isLoading && <Skeleton variant="text" />}
+          {user.data && variant !== "me" && user.data.name}
+          {variant === "me" && "You"}
+          {user.isLoading && variant !== "me" && <Skeleton variant="text" />}
         </Typography>
         <Typography variant="h5">{title}</Typography>
         <Typography variant="body2">{description}</Typography>
