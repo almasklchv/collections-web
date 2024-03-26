@@ -15,7 +15,11 @@ export const itemsApi = createApi({
         url: "/items/recent",
       }),
     }),
+    getItemsByCollectionId: build.query<Item[], string>({
+      query: (id: string) => `/items/get-all/${id}`,
+    }),
   }),
 });
 
-export const { useGetRecentlyAddedQuery } = itemsApi;
+export const { useGetRecentlyAddedQuery, useGetItemsByCollectionIdQuery } =
+  itemsApi;

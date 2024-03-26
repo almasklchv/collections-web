@@ -5,6 +5,7 @@ import SignInPage from "../pages/Auth/SignInPage";
 import HomePage from "../pages/HomePage";
 import MyPage from "../pages/Collections/MyPage";
 import CollectionsLayout from "../pages/Collections/CollectionsLayout";
+import CollectionPage from "../pages/Collections/CollectionPage";
 
 export const routes: RouteObject[] = [
   {
@@ -33,6 +34,10 @@ export const routes: RouteObject[] = [
       {
         element: <MyPage />,
         path: "my",
+      },
+      {
+        element: <CollectionPage />,
+        path: ":id",
       },
     ],
   },

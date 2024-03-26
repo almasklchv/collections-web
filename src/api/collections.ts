@@ -27,6 +27,9 @@ export const collectionsApi = createApi({
         body: collection,
       }),
     }),
+    getCollectionById: build.query<Collection, string>({
+      query: (id: string) => `/collections/${id}/by-collection-id`,
+    }),
   }),
 });
 
@@ -34,4 +37,5 @@ export const {
   useGetFiveBiggestCollectionsQuery,
   useGetCollectionsByUserIdQuery,
   useCreateCollectionMutation,
+  useGetCollectionByIdQuery,
 } = collectionsApi;

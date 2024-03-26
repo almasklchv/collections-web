@@ -9,9 +9,11 @@ import {
 import { Item } from "../../entities/item";
 import { useGetUserMutation } from "../../api/users";
 import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
-const ItemCard = ({ title, tags, userId }: Item) => {
+const ItemCard = ({ title, tags, userId, collectionId }: Item) => {
   const [getUser, user] = useGetUserMutation();
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (userId) getUser(userId);
@@ -35,7 +37,9 @@ const ItemCard = ({ title, tags, userId }: Item) => {
         )}
       </CardContent>
       <CardActions>
-        <Button>Open</Button>
+        <Button onClick={() => navigate(`/collections/${collectionId}`)}>
+          Open
+        </Button>
       </CardActions>
     </Card>
   );

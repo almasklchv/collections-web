@@ -11,6 +11,7 @@ import { useGetUserMutation } from "../../api/users";
 import { Collection } from "../../entities/collection";
 import { NO_IMAGE } from "../../consts";
 import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 const CollectionCard = ({
   userId,
@@ -19,18 +20,20 @@ const CollectionCard = ({
   imageUrl,
   theme,
   variant,
+  id,
 }: Collection) => {
   const [getUser, user] = useGetUserMutation();
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (userId) getUser(userId);
   }, []);
 
+  const handleClick = () => {
+    navigate(`/collections/${id}`);
+  };
   return (
-    <Card
-      variant="outlined"
-      sx={{ maxWidth: 345, width: "100%" }}
-    >
+    <Card variant="outlined" sx={{ maxWidth: 345, width: "100%" }}>
       <CardMedia sx={{ height: 170 }} image={imageUrl ?? NO_IMAGE} />
       <CardContent>
         <Typography color={"text-secondary"} gutterBottom>
@@ -43,7 +46,7 @@ const CollectionCard = ({
         <Typography variant="overline">{theme}</Typography>
       </CardContent>
       <CardActions>
-        <Button>Open Collection</Button>
+        <Button onClick={handleClick}>Open Collection</Button>
       </CardActions>
     </Card>
   );

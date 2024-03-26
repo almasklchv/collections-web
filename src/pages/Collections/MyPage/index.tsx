@@ -7,43 +7,24 @@ import {
   Step,
   StepLabel,
   Stepper,
-  TextField,
   Typography,
-  styled,
 } from "@mui/material";
 import {
   useCreateCollectionMutation,
   useGetCollectionsByUserIdQuery,
 } from "../../../api/collections";
 import CollectionCard from "../../../components/CollectionCard";
-import { COLLECTION_TYPE_IMAGES, ME, collectionTypes } from "../../../consts";
+import { ME, collectionTypes } from "../../../consts";
 import { useRef, useState } from "react";
-import MiniCard from "../../../components/MiniCard";
-import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import { handleUpload } from "../../../utils/firebase";
 import { CollectionType } from "../../../entities/collection-type";
+import StepContent from "../../../components/StepContent";
 
-interface CollectionTypeImages {
-  coins: string;
-  postcards: string;
-  banknotes: string;
-  painting: string;
-  stamps: string;
-}
-
-const steps = ["Select collection type", "Describe the new collection"];
-
-const VisuallyHiddenInput = styled("input")({
-  clip: "rect(0 0 0 0)",
-  clipPath: "inset(50%)",
-  height: 1,
-  overflow: "hidden",
-  position: "absolute",
-  bottom: 0,
-  left: 0,
-  whiteSpace: "nowrap",
-  width: 1,
-});
+const steps = [
+  "Select collection type",
+  "Describe the new collection",
+  "Add custom fields to items (optional)",
+];
 
 const MyPage = () => {
   const {
@@ -78,6 +59,19 @@ const MyPage = () => {
     }
   };
 
+  const stepContentProps = {
+    stepIndex: activeStep,
+    selectedIndex,
+    setSelectedIndex,
+    selectedCollectionType,
+    collectionTitle,
+    setCollectionTitle,
+    collectionDescription,
+    setCollectionDescription,
+    imageInputRef,
+    handleImage,
+  };
+
   const handleDone = async () => {
     setIsDisabled(true);
     const downloadUrl = await handleUpload(image);
@@ -92,93 +86,6 @@ const MyPage = () => {
     setIsOpen(false);
     refetch();
     setIsDisabled(false);
-  };
-
-  const getStepContent = (stepIndex: number) => {
-    switch (stepIndex) {
-      case 0:
-        return (
-          <>
-            <Box
-              sx={{ display: "flex", flexWrap: "wrap", gap: 2, marginTop: 5 }}
-            >
-              {collectionTypes.map((type: string, index: number) => {
-                return (
-                  <MiniCard
-                    imageUrl={
-                      COLLECTION_TYPE_IMAGES[
-                        type.toLowerCase() as keyof CollectionTypeImages
-                      ]
-                    }
-                    type={type}
-                    key={type}
-                    index={index}
-                    selectedIndex={selectedIndex}
-                    setSelectedIndex={setSelectedIndex}
-                  />
-                );
-              })}
-            </Box>
-          </>
-        );
-      case 1:
-        return (
-          <>
-            <Box sx={{ marginTop: 3 }}>
-              <Typography variant="body2">
-                Collection type: {selectedCollectionType}
-              </Typography>
-              <Typography
-                variant="body2"
-                sx={{ marginTop: 2, marginBottom: 1 }}
-              >
-                Title:
-              </Typography>
-              <TextField
-                variant="outlined"
-                placeholder="Enter collection title here"
-                fullWidth
-                value={collectionTitle}
-                onChange={(e) => setCollectionTitle(e.target.value)}
-              />
-              <Typography
-                variant="body2"
-                sx={{ marginTop: 2, marginBottom: 1 }}
-              >
-                Description:
-              </Typography>
-              <TextField
-                multiline
-                fullWidth
-                minRows={6}
-                maxRows={6}
-                placeholder="About collection ..."
-                value={collectionDescription}
-                onChange={(e) => setCollectionDescription(e.target.value)}
-              />
-              <Typography
-                variant="body2"
-                sx={{ marginTop: 2, marginBottom: 1 }}
-              >
-                Image:
-              </Typography>
-              <Button
-                component="label"
-                variant="contained"
-                startIcon={<CloudUploadIcon />}
-              >
-                Upload image
-                <VisuallyHiddenInput
-                  type="file"
-                  accept=".png,.jpg,.jpeg"
-                  ref={imageInputRef}
-                  onChange={handleImage}
-                />
-              </Button>
-            </Box>
-          </>
-        );
-    }
   };
 
   if (
@@ -223,6 +130,8 @@ const MyPage = () => {
             background: "#fff",
             width: "30%",
             padding: "20px",
+            maxHeight: "90vh",
+            overflowY: "auto",
           }}
         >
           <Stepper activeStep={activeStep}>
@@ -233,7 +142,7 @@ const MyPage = () => {
             ))}
           </Stepper>
           <Divider sx={{ marginTop: 2 }} />
-          {getStepContent(activeStep)}
+          <StepContent {...stepContentProps} />
           <Divider sx={{ marginTop: 5 }} />
           <ButtonGroup
             sx={{
