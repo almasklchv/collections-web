@@ -15,10 +15,11 @@ import {
 } from "../../../api/collections";
 import CollectionCard from "../../../components/CollectionCard";
 import { ME, collectionTypes } from "../../../consts";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { handleUpload } from "../../../utils/firebase";
 import { CollectionType } from "../../../entities/collection-type";
 import StepContent from "../../../components/StepContent";
+import { CustomFields } from "../../../entities/custom-field";
 
 const steps = [
   "Select collection type",
@@ -44,6 +45,13 @@ const MyPage = () => {
   const [collectionDescription, setCollectionDescription] =
     useState<string>("");
   const [isDisabled, setIsDisabled] = useState(false);
+  const [customFields, setCustomFields] = useState<CustomFields>({
+    datetime: [],
+    logical: [],
+    numeric: [],
+    string: [],
+    text: [],
+  });
 
   const handleNext = () => {
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
@@ -70,18 +78,60 @@ const MyPage = () => {
     setCollectionDescription,
     imageInputRef,
     handleImage,
+    customFields,
+    setCustomFields,
   };
+
+  useEffect(() => {
+    console.log(customFields);
+  }, [customFields]);
 
   const handleDone = async () => {
     setIsDisabled(true);
     const downloadUrl = await handleUpload(image);
+
+    const customFieldsForDB = {
+      custom_string1_state: customFields.string.length > 0,
+      custom_string1_name: customFields.string[0]?.name || null,
+      custom_string2_state: customFields.string.length > 1,
+      custom_string2_name: customFields.string[1]?.name || null,
+      custom_string3_state: customFields.string.length > 2,
+      custom_string3_name: customFields.string[2]?.name || null,
+      custom_int1_state: customFields.numeric.length > 0,
+      custom_int1_name: customFields.numeric[0]?.name || null,
+      custom_int2_state: customFields.numeric.length > 1,
+      custom_int2_name: customFields.numeric[1]?.name || null,
+      custom_int3_state: customFields.numeric.length > 2,
+      custom_int3_name: customFields.numeric[2]?.name || null,
+      custom_text1_state: customFields.text.length > 0,
+      custom_text1_name: customFields.text[0]?.name || null,
+      custom_text2_state: customFields.text.length > 1,
+      custom_text2_name: customFields.text[1]?.name || null,
+      custom_text3_state: customFields.text.length > 2,
+      custom_text3_name: customFields.text[2]?.name || null,
+      custom_boolean1_state: customFields.logical.length > 0,
+      custom_boolean1_name: customFields.logical[0]?.name || null,
+      custom_boolean2_state: customFields.logical.length > 1,
+      custom_boolean2_name: customFields.logical[1]?.name || null,
+      custom_boolean3_state: customFields.logical.length > 2,
+      custom_boolean3_name: customFields.logical[2]?.name || null,
+      custom_date1_state: customFields.datetime.length > 0,
+      custom_date1_name: customFields.datetime[0]?.name || null,
+      custom_date2_state: customFields.datetime.length > 1,
+      custom_date2_name: customFields.datetime[1]?.name || null,
+      custom_date3_state: customFields.datetime.length > 2,
+      custom_date3_name: customFields.datetime[2]?.name || null,
+    };
+
     const collection = {
       title: collectionTitle,
       description: collectionDescription,
       theme:
         CollectionType[selectedCollectionType as keyof typeof CollectionType],
       imageUrl: downloadUrl,
+      ...customFieldsForDB,
     };
+    console.log(collection);
     await uploadCollection(collection);
     setIsOpen(false);
     refetch();

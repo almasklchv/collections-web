@@ -1,9 +1,23 @@
 import { TextField, Typography } from "@mui/material";
 import { CustomFieldsType } from "../../entities/custom-field-type";
-import { CustomFieldI } from "../../entities/custom-field";
+import { CustomFieldI, CustomFields } from "../../entities/custom-field";
 
-const CustomField = (props: CustomFieldI) => {
-  console.log(props.type);
+interface CustomFieldProps {
+  id: number;
+  type: CustomFieldsType;
+  customFields: CustomFields;
+  setCustomFields: React.Dispatch<React.SetStateAction<CustomFields>>;
+}
+
+const CustomField = (props: CustomFieldProps) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    props.customFields[props.type].map((field: CustomFieldI) => {
+      if (props.id === field.id) {
+        field.name = e.target.value;
+      }
+    });
+    console.log(props.customFields);
+  };
 
   return (
     <>
@@ -32,7 +46,11 @@ const CustomField = (props: CustomFieldI) => {
           Text:
         </Typography>
       )}
-      <TextField placeholder="Enter a name for field..." fullWidth />
+      <TextField
+        placeholder="Enter a name for field..."
+        fullWidth
+        onChange={handleChange}
+      />
     </>
   );
 };

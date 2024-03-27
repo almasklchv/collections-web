@@ -14,6 +14,7 @@ import { VisuallyHiddenInput } from "../VisuallyHiddenComponent";
 import { useState } from "react";
 import { CustomFieldsType } from "../../entities/custom-field-type";
 import CustomField from "../CustomField";
+import { CustomFields } from "../../entities/custom-field";
 
 interface CollectionTypeImages {
   coins: string;
@@ -34,6 +35,8 @@ interface StepContentProps {
   setCollectionDescription: React.Dispatch<React.SetStateAction<string>>;
   imageInputRef: React.MutableRefObject<null>;
   handleImage: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  customFields: CustomFields;
+  setCustomFields: React.Dispatch<React.SetStateAction<CustomFields>>;
 }
 
 interface CustomFieldsCount {
@@ -59,7 +62,9 @@ const StepContent = (props: StepContentProps) => {
     useState<keyof CustomFieldsCount>("datetime");
 
   const addCustomField = () => {
-    if (!selectedCustomField) return;
+    if (!selectedCustomField || customFieldsCount[selectedCustomField] > 3)
+      return;
+    ``;
     setCustomFieldsCount((prevFieldsCount) => {
       const updatedFieldsCount = {
         ...prevFieldsCount,
@@ -76,6 +81,14 @@ const StepContent = (props: StepContentProps) => {
 
       return updatedFieldsCount;
     });
+
+    props.setCustomFields((prev) => ({
+      ...prev,
+      [selectedCustomField]: [
+        ...prev[selectedCustomField],
+        { name: "", id: prev[selectedCustomField].length },
+      ],
+    }));
   };
 
   switch (props.stepIndex) {
@@ -156,7 +169,13 @@ const StepContent = (props: StepContentProps) => {
           <Box sx={{ marginTop: 3 }}>
             {Object.entries(customFieldsCount).map(([key, value]) => {
               return Array.from({ length: value }, (_, index) => (
-                <CustomField key={index} type={key} />
+                <CustomField
+                  id={index}
+                  key={index}
+                  type={key as CustomFieldsType}
+                  customFields={props.customFields}
+                  setCustomFields={props.setCustomFields}
+                />
               ));
             })}
 
