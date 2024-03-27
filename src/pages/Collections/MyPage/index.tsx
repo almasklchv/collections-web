@@ -36,6 +36,7 @@ const MyPage = () => {
   const imageInputRef = useRef(null);
   const [image, setImage] = useState<File>();
   const [uploadCollection] = useCreateCollectionMutation();
+  console.log(collections);
 
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [selectedIndex, setSelectedIndex] = useState(0);

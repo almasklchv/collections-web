@@ -9,9 +9,15 @@ import {
 } from "@mui/material";
 import { useGetUserMutation } from "../../api/users";
 import { Collection } from "../../entities/collection";
-import { NO_IMAGE } from "../../consts";
+import { ME, NO_IMAGE } from "../../consts";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import {
+  useDeleteCollectionMutation,
+  useGetCollectionByIdQuery,
+  useGetCollectionsByUserIdQuery,
+} from "../../api/collections";
+import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 
 const CollectionCard = ({
   userId,
@@ -23,8 +29,11 @@ const CollectionCard = ({
   id,
 }: Collection) => {
   const [getUser, user] = useGetUserMutation();
+  const { data: collection } = useGetCollectionByIdQuery(id ?? "");
+  const [deleteCollection] = useDeleteCollectionMutation();
   const navigate = useNavigate();
 
+  const { refetch } = useGetCollectionsByUserIdQuery(userId ?? "");
   useEffect(() => {
     if (userId) getUser(userId);
   }, []);
@@ -47,6 +56,17 @@ const CollectionCard = ({
       </CardContent>
       <CardActions>
         <Button onClick={handleClick}>Open Collection</Button>
+        {(collection?.userId === ME?.id || ME?.role === "ADMIN") && (
+          <Button
+            startIcon={<DeleteForeverIcon />}
+            onClick={async () => {
+              await deleteCollection(collection?.id ?? "");
+              refetch();
+            }}
+          >
+            Delete
+          </Button>
+        )}
       </CardActions>
     </Card>
   );

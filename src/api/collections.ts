@@ -30,6 +30,12 @@ export const collectionsApi = createApi({
     getCollectionById: build.query<Collection, string>({
       query: (id: string) => `/collections/${id}/by-collection-id`,
     }),
+    deleteCollection: build.mutation({
+      query: (id: string) => ({
+        url: `/collections/${id}`,
+        method: "DELETE",
+      }),
+    }),
   }),
 });
 
@@ -38,4 +44,5 @@ export const {
   useGetCollectionsByUserIdQuery,
   useCreateCollectionMutation,
   useGetCollectionByIdQuery,
+  useDeleteCollectionMutation,
 } = collectionsApi;
