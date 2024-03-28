@@ -27,6 +27,7 @@ const SignInPage = () => {
   const [signIn, signInResult] = useSignInMutation();
   const [getUser, getUserResult] = useGetUserMutation();
   const [email, setEmail] = useState<string>();
+  const [signInError, setSignInError] = useState("");
 
   const onSubmit: SubmitHandler<Partial<User>> = async (data) => {
     signIn(data);
@@ -34,6 +35,10 @@ const SignInPage = () => {
   };
 
   useEffect(() => {
+    if (signInResult.error) {
+      setSignInError("Invalid credentials.");
+    }
+
     if (signInResult.data?.accessToken && email) {
       localStorage.setItem("token", signInResult.data.accessToken);
       getUser(email);
@@ -72,7 +77,9 @@ const SignInPage = () => {
             id="password"
             aria-describedby="Your password"
           />
-          <FormHelperText error>{errors.password?.message}</FormHelperText>
+          <FormHelperText error>
+            {errors.password?.message || signInError}
+          </FormHelperText>
         </FormControl>
 
         <Button variant="contained" type="submit" sx={{ marginTop: 5 }}>

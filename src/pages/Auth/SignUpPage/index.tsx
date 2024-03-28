@@ -12,12 +12,13 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { schema } from "../../../schemas/sign-up-schema";
 import { User } from "../../../entities/user";
 import { useSignUpMutation } from "../../../api/auth";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
 const SignUpPage = () => {
   const [signUp, result] = useSignUpMutation();
   const navigate = useNavigate();
+  const [signUpError, setSignUpError] = useState("");
 
   const {
     register,
@@ -32,6 +33,14 @@ const SignUpPage = () => {
   };
 
   useEffect(() => {
+    if (
+      result.error &&
+      "status" in result.error &&
+      result.error.status === 409
+    ) {
+      setSignUpError("Account with this email already exists.");
+    }
+
     if (result.data) {
       navigate("/auth/sign-in");
     }
@@ -63,7 +72,9 @@ const SignUpPage = () => {
             id="email"
             aria-describedby="Your email"
           />
-          <FormHelperText error>{errors.email?.message}</FormHelperText>
+          <FormHelperText error>
+            {errors.email?.message || signUpError}
+          </FormHelperText>
         </FormControl>
 
         <FormControl sx={{ marginTop: 2 }}>
