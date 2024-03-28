@@ -21,9 +21,8 @@ import { useState } from "react";
 const ItemPage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const [isLikedByYou, setIsLikedByYou] = useState(false);
+  const [isLikedByYou] = useState(false);
   const { data: item } = useGetItemByIdQuery(id ?? "");
-  console.log(item?.customFields);
 
   return (
     <Box>
@@ -54,6 +53,7 @@ const ItemPage = () => {
             </TableRow>
             {Object.keys(item?.customFields ?? "").map((key) => (
               <TableRow
+                key={key}
                 sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
               >
                 <TableCell component="th" scope="row">
