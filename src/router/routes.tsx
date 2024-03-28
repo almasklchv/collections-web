@@ -6,38 +6,43 @@ import HomePage from "../pages/HomePage";
 import MyPage from "../pages/Collections/MyPage";
 import CollectionsLayout from "../pages/Collections/CollectionsLayout";
 import CollectionPage from "../pages/Collections/CollectionPage";
+import AppLayout from "../layouts/AppLayout";
 
 export const routes: RouteObject[] = [
   {
-    element: <HomePage />,
-    path: "/",
-    errorElement: <p>Page not found.</p>,
-  },
-  {
-    element: <AuthLayout />,
-    path: "/auth",
+    element: <AppLayout />,
     children: [
       {
-        element: <SignUpPage />,
-        path: "sign-up",
+        index: true,
+        element: <HomePage />,
       },
       {
-        element: <SignInPage />,
-        path: "sign-in",
+        path: "auth",
+        element: <AuthLayout />,
+        children: [
+          {
+            path: "sign-up",
+            element: <SignUpPage />,
+          },
+          {
+            path: "sign-in",
+            element: <SignInPage />,
+          },
+        ],
       },
-    ],
-  },
-  {
-    element: <CollectionsLayout />,
-    path: "/collections",
-    children: [
       {
-        element: <MyPage />,
-        path: "my",
-      },
-      {
-        element: <CollectionPage />,
-        path: ":id",
+        path: "collections",
+        element: <CollectionsLayout />,
+        children: [
+          {
+            path: "my",
+            element: <MyPage />,
+          },
+          {
+            path: ":id",
+            element: <CollectionPage />,
+          },
+        ],
       },
     ],
   },

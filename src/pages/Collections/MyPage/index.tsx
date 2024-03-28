@@ -21,6 +21,7 @@ import { CollectionType } from "../../../entities/collection-type";
 import StepContent from "../../../components/StepContent";
 import { CustomFields } from "../../../entities/custom-field";
 import { Collection } from "../../../entities/collection";
+import { useNavigate } from "react-router-dom";
 
 const steps = [
   "Select collection type",
@@ -29,6 +30,7 @@ const steps = [
 ];
 
 const MyPage = () => {
+  const navigate = useNavigate();
   const {
     data: collections,
     isLoading,
@@ -143,7 +145,7 @@ const MyPage = () => {
         <Typography>You must be logged in to view your collections.</Typography>
         <Button
           variant="contained"
-          onClick={() => (window.location.href = "/auth/sign-in")}
+          onClick={() => navigate("/auth/sign-in")}
           sx={{ marginTop: 3 }}
         >
           Sign In
