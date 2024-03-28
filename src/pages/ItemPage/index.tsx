@@ -52,7 +52,7 @@ const ItemPage = () => {
               </TableCell>
               <TableCell>{item?.tags.join(", ")}</TableCell>
             </TableRow>
-            {Object.keys(item?.customFields).map((key) => (
+            {Object.keys(item?.customFields ?? "").map((key) => (
               <TableRow
                 sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
               >
