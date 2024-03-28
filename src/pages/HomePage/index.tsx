@@ -28,7 +28,6 @@ const HomePage = () => {
         sx={{
           display: "flex",
           flexWrap: "wrap",
-          justifyContent: "space-between",
           padding: 15,
           marginLeft: 30,
           gap: 3

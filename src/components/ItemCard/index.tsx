@@ -20,8 +20,11 @@ const ItemCard = ({ title, tags, userId, collectionId }: Item) => {
   }, []);
 
   return (
-    <Card variant="outlined" sx={{ maxWidth: 345, width: "100%" }}>
-      <CardContent>
+    <Card
+      variant="outlined"
+      sx={{ maxWidth: 345, width: "100%", position: "relative" }}
+    >
+      <CardContent sx={{marginBottom: "30px"}}>
         <Typography color={"text-secondary"} gutterBottom>
           {user.data && user.data.name}
           {user.isLoading && <Skeleton variant="text" />}
@@ -37,7 +40,10 @@ const ItemCard = ({ title, tags, userId, collectionId }: Item) => {
         )}
       </CardContent>
       <CardActions>
-        <Button onClick={() => navigate(`/collections/${collectionId}`)}>
+        <Button
+          onClick={() => navigate(`/collections/${collectionId}`)}
+          sx={{ bottom: 5, position: "absolute" }}
+        >
           Open
         </Button>
       </CardActions>

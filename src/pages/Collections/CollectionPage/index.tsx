@@ -12,7 +12,10 @@ import {
   Typography,
 } from "@mui/material";
 import ItemCard from "../../../components/ItemCard";
-import { useGetCollectionByIdQuery } from "../../../api/collections";
+import {
+  useAddItemToCollectionMutation,
+  useGetCollectionByIdQuery,
+} from "../../../api/collections";
 import { ME } from "../../../consts";
 import { Item } from "../../../entities/item";
 import { useEffect, useState } from "react";
@@ -23,11 +26,20 @@ import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
 const CollectionPage = () => {
   const { id } = useParams();
   const { data: collection } = useGetCollectionByIdQuery(id ?? "");
-  const { data: items, isLoading } = useGetItemsByCollectionIdQuery(id ?? "");
+  const {
+    data: items,
+    isLoading,
+    refetch,
+  } = useGetItemsByCollectionIdQuery(id ?? "");
   const navigate = useNavigate();
   const [customFields, setCustomFields] = useState([]);
+  const [title, setTitle] = useState("");
+  const [customFieldsForDB, setCustomFieldsForDB] = useState({});
   const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [isDisabled, setIsDisabled] = useState(false);
   const [chipData, setChipData] = useState<ChipData[]>([]);
+
+  const [addItemToColection] = useAddItemToCollectionMutation();
 
   useEffect(() => {
     for (const key in collection) {
@@ -36,6 +48,29 @@ const CollectionPage = () => {
       }
     }
   }, [collection]);
+
+  const handleCustomFieldChange = (
+    fieldKey: string,
+    value: string | boolean | number | undefined
+  ) => {
+    setCustomFieldsForDB((prev) => ({
+      ...prev,
+      [fieldKey]: value,
+    }));
+  };
+
+  const handleDone = async () => {
+    setIsDisabled(true);
+    const item = {
+      title,
+      tags: chipData.map((chip) => chip.label),
+      customFields: customFieldsForDB,
+    };
+    await addItemToColection({ id: collection?.id, item });
+    setIsOpen(false);
+    refetch();
+    setIsDisabled(false);
+  };
 
   return (
     <Box>
@@ -49,10 +84,11 @@ const CollectionPage = () => {
           </Button>
         )}
       </ButtonGroup>
-
-      {items?.map((item: Item) => (
-        <ItemCard {...item} key={id} />
-      ))}
+      <Box sx={{ display: "flex", flexWrap: "wrap", gap: 3 }}>
+        {items?.map((item: Item) => (
+          <ItemCard {...item} key={id} />
+        ))}
+      </Box>
       {isLoading && <Typography>Loading...</Typography>}
       {!items?.length && !isLoading && (
         <Typography>This collection doesn't have items.</Typography>
@@ -83,7 +119,11 @@ const CollectionPage = () => {
           <Typography variant="body2" sx={{ marginTop: 2, marginBottom: 1 }}>
             Title:
           </Typography>
-          <TextField fullWidth placeholder="Title of item..." />
+          <TextField
+            fullWidth
+            placeholder="Title of item..."
+            onChange={(e) => setTitle(e.target.value)}
+          />
           <Typography variant="body2" sx={{ marginTop: 2, marginBottom: 1 }}>
             Tags:
           </Typography>
@@ -95,6 +135,7 @@ const CollectionPage = () => {
           />
           {Object.keys(customFields).map((key) => {
             if (collection !== undefined) {
+              const fieldKey = collection[key];
               return (
                 <>
                   {!key.startsWith("custom_boolean") && (
@@ -102,45 +143,68 @@ const CollectionPage = () => {
                       variant="body2"
                       sx={{ marginTop: 2, marginBottom: 1 }}
                     >
-                      {collection[key]}
+                      {fieldKey}
                     </Typography>
                   )}
-                  {key.startsWith("custom_string") && collection[key] && (
+                  {key.startsWith("custom_string") && fieldKey && (
                     <TextField
                       fullWidth
-                      placeholder={`Enter ${collection[key].toLowerCase()}`}
+                      placeholder={`Enter ${fieldKey.toLowerCase()}`}
+                      onChange={(e) =>
+                        handleCustomFieldChange(fieldKey, e.target.value)
+                      }
                     />
                   )}
-                  {key.startsWith("custom_int") && collection[key] && (
+                  {key.startsWith("custom_int") && fieldKey && (
                     <TextField
                       fullWidth
-                      placeholder={`Enter ${collection[key].toLowerCase()}`}
+                      placeholder={`Enter ${fieldKey.toLowerCase()}`}
                       type="number"
+                      onChange={(e) =>
+                        handleCustomFieldChange(fieldKey, +e.target.value)
+                      }
                     />
                   )}
-                  {key.startsWith("custom_text") && collection[key] && (
+                  {key.startsWith("custom_text") && fieldKey && (
                     <TextField
                       multiline
                       fullWidth
                       minRows={6}
                       maxRows={6}
-                      placeholder={`Enter ${collection[key].toLowerCase()}`}
+                      placeholder={`Enter ${fieldKey.toLowerCase()}`}
+                      onChange={(e) =>
+                        handleCustomFieldChange(fieldKey, e.target.value)
+                      }
                     />
                   )}
-                  {key.startsWith("custom_boolean") && collection[key] && (
+                  {key.startsWith("custom_boolean") && fieldKey && (
                     <FormControlLabel
-                      control={<Checkbox />}
+                      control={
+                        <Checkbox
+                          onChange={(e) =>
+                            handleCustomFieldChange(fieldKey, e.target.checked)
+                          }
+                        />
+                      }
                       label={
                         <Typography variant="body2" sx={{ fontSize: "14px" }}>
-                          {collection[key]}:
+                          {fieldKey}:
                         </Typography>
                       }
                       labelPlacement="start"
                       sx={{ marginLeft: 0 }}
                     />
                   )}
-                  {key.startsWith("custom_date") && collection[key] && (
-                    <DateTimePicker sx={{ width: "100%" }} />
+                  {key.startsWith("custom_date") && fieldKey && (
+                    <DateTimePicker
+                      onChange={(newValue) =>
+                        handleCustomFieldChange(
+                          fieldKey,
+                          newValue?.toISOString()
+                        )
+                      }
+                      sx={{ width: "100%" }}
+                    />
                   )}
                 </>
               );
@@ -154,7 +218,12 @@ const CollectionPage = () => {
           >
             Cancel
           </Button>
-          <Button variant="contained" sx={{ float: "right", marginTop: 1 }}>
+          <Button
+            variant="contained"
+            sx={{ float: "right", marginTop: 1 }}
+            onClick={handleDone}
+            disabled={isDisabled}
+          >
             Done
           </Button>
         </Box>
