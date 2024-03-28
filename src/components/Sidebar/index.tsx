@@ -47,7 +47,7 @@ const Sidebar = () => {
           {!localStorage.getItem("token") && (
             <ListItemText
               primary="Sign In"
-              onClick={() => (window.location.href = "/auth/sign-in")}
+              onClick={() => navigate("/auth/sign-in")}
             />
           )}
         </ListItemButton>
