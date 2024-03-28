@@ -1,6 +1,7 @@
 import {
   Box,
   Button,
+  FormHelperText,
   MenuItem,
   Select,
   SelectChangeEvent,
@@ -37,6 +38,8 @@ interface StepContentProps {
   handleImage: (e: React.ChangeEvent<HTMLInputElement>) => void;
   customFields: CustomFields;
   setCustomFields: React.Dispatch<React.SetStateAction<CustomFields>>;
+  collectionTitleError?: string;
+  collectionDescriptionError?: string;
 }
 
 interface CustomFieldsCount {
@@ -132,6 +135,7 @@ const StepContent = (props: StepContentProps) => {
               value={props.collectionTitle}
               onChange={(e) => props.setCollectionTitle(e.target.value)}
             />
+            <FormHelperText error>{!props.collectionTitle && props.collectionTitleError}</FormHelperText>
             <Typography variant="body2" sx={{ marginTop: 2, marginBottom: 1 }}>
               Description:
             </Typography>
@@ -144,6 +148,9 @@ const StepContent = (props: StepContentProps) => {
               value={props.collectionDescription}
               onChange={(e) => props.setCollectionDescription(e.target.value)}
             />
+            <FormHelperText error>
+              {!props.collectionDescription && props.collectionDescriptionError}
+            </FormHelperText>
             <Typography variant="body2" sx={{ marginTop: 2, marginBottom: 1 }}>
               Image:
             </Typography>

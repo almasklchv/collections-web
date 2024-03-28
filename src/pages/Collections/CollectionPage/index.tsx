@@ -7,6 +7,7 @@ import {
   Checkbox,
   Divider,
   FormControlLabel,
+  FormHelperText,
   Modal,
   TextField,
   Typography,
@@ -41,6 +42,9 @@ const CollectionPage = () => {
 
   const [addItemToColection] = useAddItemToCollectionMutation();
 
+  const [titleError, setTittleError] = useState("");
+  const [tagsError, setTagsError] = useState("");
+
   useEffect(() => {
     for (const key in collection) {
       if (key.startsWith("custom") && key.endsWith("name")) {
@@ -60,16 +64,22 @@ const CollectionPage = () => {
   };
 
   const handleDone = async () => {
-    setIsDisabled(true);
-    const item = {
-      title,
-      tags: chipData.map((chip) => chip.label),
-      customFields: customFieldsForDB,
-    };
-    await addItemToColection({ id: collection?.id, item });
-    setIsOpen(false);
-    refetch();
-    setIsDisabled(false);
+    if (!title) {
+      setTittleError("Enter title of item.");
+    } else if (!chipData.length) {
+      setTagsError("Enter tags.");
+    } else {
+      setIsDisabled(true);
+      const item = {
+        title,
+        tags: chipData.map((chip) => chip.label),
+        customFields: customFieldsForDB,
+      };
+      await addItemToColection({ id: collection?.id, item });
+      setIsOpen(false);
+      refetch();
+      setIsDisabled(false);
+    }
   };
 
   return (
@@ -124,6 +134,7 @@ const CollectionPage = () => {
             placeholder="Title of item..."
             onChange={(e) => setTitle(e.target.value)}
           />
+          <FormHelperText error>{!title && titleError}</FormHelperText>
           <Typography variant="body2" sx={{ marginTop: 2, marginBottom: 1 }}>
             Tags:
           </Typography>
@@ -133,6 +144,7 @@ const CollectionPage = () => {
             chipData={chipData}
             setChipData={setChipData}
           />
+          <FormHelperText error>{!chipData.length && tagsError}</FormHelperText>
           {Object.keys(customFields).map((key) => {
             if (collection !== undefined) {
               const fieldKey = collection[key];
