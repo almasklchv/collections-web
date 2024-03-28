@@ -19,7 +19,7 @@ const ChipsInput = ({
       key: chipData.length,
       label: tag,
     };
-    chipData.push(tagObj);
+    setChipData((prev) => [...prev, tagObj]);
     setChip("");
   };
   return (

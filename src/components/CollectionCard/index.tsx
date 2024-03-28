@@ -18,6 +18,7 @@ import {
   useGetCollectionsByUserIdQuery,
 } from "../../api/collections";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
+import MDEditor from "@uiw/react-md-editor";
 
 const CollectionCard = ({
   userId,
@@ -43,19 +44,25 @@ const CollectionCard = ({
     navigate(`/collections/${id}`);
   };
   return (
-    <Card variant="outlined" sx={{ maxWidth: 345, width: "100%" }}>
+    <Card
+      variant="outlined"
+      sx={{ maxWidth: 345, width: "100%", position: "relative" }}
+    >
       <CardMedia sx={{ height: 170 }} image={imageUrl ?? NO_IMAGE} />
-      <CardContent>
+      <CardContent sx={{marginBottom: 4}}>
         <Typography color={"text-secondary"} gutterBottom>
           {user.data && variant !== "me" && user.data.name}
           {variant === "me" && "You"}
           {user.isLoading && variant !== "me" && <Skeleton variant="text" />}
         </Typography>
         <Typography variant="h5">{title}</Typography>
-        <Typography variant="body2">{description}</Typography>
+        <MDEditor.Markdown
+          source={description}
+          style={{ whiteSpace: "pre-wrap" }}
+        />
         <Typography variant="overline">{theme}</Typography>
       </CardContent>
-      <CardActions>
+      <CardActions sx={{ position: "absolute", bottom: 0 }}>
         <Button onClick={handleClick}>Open Collection</Button>
         {(collection?.userId === ME?.id || ME?.role === "ADMIN") && (
           <Button

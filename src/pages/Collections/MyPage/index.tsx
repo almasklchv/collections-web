@@ -56,8 +56,18 @@ const MyPage = () => {
     text: [],
   });
 
+  const [collectionTitleError, setCollectionTitleError] = useState("");
+  const [collectionDescriptionError, setCollectionDescriptionError] =
+    useState("");
+
   const handleNext = () => {
-    setActiveStep((prevActiveStep) => prevActiveStep + 1);
+    if (!collectionTitle && activeStep !== 0) {
+      setCollectionTitleError("Enter title of collection.");
+    } else if (!collectionDescription   && activeStep !== 0) {
+      setCollectionDescriptionError("Enter description of collection.");
+    } else {
+      setActiveStep((prevActiveStep) => prevActiveStep + 1);
+    }
   };
 
   const handleBack = () => {
@@ -83,6 +93,8 @@ const MyPage = () => {
     handleImage,
     customFields,
     setCustomFields,
+    collectionTitleError,
+    collectionDescriptionError,
   };
 
   const handleDone = async () => {

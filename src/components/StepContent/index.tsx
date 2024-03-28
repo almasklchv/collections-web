@@ -1,6 +1,7 @@
 import {
   Box,
   Button,
+  FormHelperText,
   MenuItem,
   Select,
   SelectChangeEvent,
@@ -15,6 +16,7 @@ import { useState } from "react";
 import { CustomFieldsType } from "../../entities/custom-field-type";
 import CustomField from "../CustomField";
 import { CustomFields } from "../../entities/custom-field";
+import MDEditor from "@uiw/react-md-editor";
 
 interface CollectionTypeImages {
   coins: string;
@@ -37,6 +39,8 @@ interface StepContentProps {
   handleImage: (e: React.ChangeEvent<HTMLInputElement>) => void;
   customFields: CustomFields;
   setCustomFields: React.Dispatch<React.SetStateAction<CustomFields>>;
+  collectionTitleError?: string;
+  collectionDescriptionError?: string;
 }
 
 interface CustomFieldsCount {
@@ -132,18 +136,19 @@ const StepContent = (props: StepContentProps) => {
               value={props.collectionTitle}
               onChange={(e) => props.setCollectionTitle(e.target.value)}
             />
+            <FormHelperText error>
+              {!props.collectionTitle && props.collectionTitleError}
+            </FormHelperText>
             <Typography variant="body2" sx={{ marginTop: 2, marginBottom: 1 }}>
               Description:
             </Typography>
-            <TextField
-              multiline
-              fullWidth
-              minRows={6}
-              maxRows={6}
-              placeholder="About collection ..."
+            <MDEditor
               value={props.collectionDescription}
-              onChange={(e) => props.setCollectionDescription(e.target.value)}
+              onChange={(value) => props.setCollectionDescription(value ?? "")}
             />
+            <FormHelperText error>
+              {!props.collectionDescription && props.collectionDescriptionError}
+            </FormHelperText>
             <Typography variant="body2" sx={{ marginTop: 2, marginBottom: 1 }}>
               Image:
             </Typography>
