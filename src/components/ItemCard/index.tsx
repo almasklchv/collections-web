@@ -50,9 +50,7 @@ const ItemCard = ({ title, tags, userId, collectionId, id }: Item) => {
         )}
       </CardContent>
       <CardActions sx={{ bottom: -5, position: "absolute" }}>
-        <Button onClick={() => navigate(`/collections/${collectionId}`)}>
-          Open
-        </Button>
+        <Button onClick={() => navigate(`/items/${id}`)}>Open</Button>
         {(item?.userId === ME?.id || ME?.role === "ADMIN") && (
           <Button
             startIcon={<DeleteForeverIcon />}

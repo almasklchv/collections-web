@@ -6,4 +6,5 @@ export interface Item {
   title: string;
   tags: string[];
   collectionName: string;
+  customFields: [];
 }
