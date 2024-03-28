@@ -18,8 +18,21 @@ export const itemsApi = createApi({
     getItemsByCollectionId: build.query<Item[], string>({
       query: (id: string) => `/items/get-all/${id}`,
     }),
+    getItemById: build.query<Item, string>({
+      query: (id: string) => `/items/${id}`,
+    }),
+    deleteItem: build.mutation({
+      query: (id: string) => ({
+        url: `/items/${id}`,
+        method: "DELETE",
+      }),
+    }),
   }),
 });
 
-export const { useGetRecentlyAddedQuery, useGetItemsByCollectionIdQuery } =
-  itemsApi;
+export const {
+  useGetRecentlyAddedQuery,
+  useGetItemsByCollectionIdQuery,
+  useGetItemByIdQuery,
+  useDeleteItemMutation,
+} = itemsApi;

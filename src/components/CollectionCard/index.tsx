@@ -34,6 +34,7 @@ const CollectionCard = ({
   const navigate = useNavigate();
 
   const { refetch } = useGetCollectionsByUserIdQuery(userId ?? "");
+  
   useEffect(() => {
     if (userId) getUser(userId);
   }, []);

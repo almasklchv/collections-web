@@ -10,9 +10,19 @@ import { Item } from "../../entities/item";
 import { useGetUserMutation } from "../../api/users";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import {
+  useDeleteItemMutation,
+  useGetItemByIdQuery,
+  useGetItemsByCollectionIdQuery,
+} from "../../api/items";
+import { ME } from "../../consts";
+import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 
-const ItemCard = ({ title, tags, userId, collectionId }: Item) => {
+const ItemCard = ({ title, tags, userId, collectionId, id }: Item) => {
   const [getUser, user] = useGetUserMutation();
+  const { data: item } = useGetItemByIdQuery(id ?? "");
+  const [deleteItem] = useDeleteItemMutation();
+  const { refetch } = useGetItemsByCollectionIdQuery(collectionId ?? "");
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -24,7 +34,7 @@ const ItemCard = ({ title, tags, userId, collectionId }: Item) => {
       variant="outlined"
       sx={{ maxWidth: 345, width: "100%", position: "relative" }}
     >
-      <CardContent sx={{marginBottom: "30px"}}>
+      <CardContent sx={{ marginBottom: "30px" }}>
         <Typography color={"text-secondary"} gutterBottom>
           {user.data && user.data.name}
           {user.isLoading && <Skeleton variant="text" />}
@@ -39,13 +49,21 @@ const ItemCard = ({ title, tags, userId, collectionId }: Item) => {
           </Typography>
         )}
       </CardContent>
-      <CardActions>
-        <Button
-          onClick={() => navigate(`/collections/${collectionId}`)}
-          sx={{ bottom: 5, position: "absolute" }}
-        >
+      <CardActions sx={{ bottom: -5, position: "absolute" }}>
+        <Button onClick={() => navigate(`/collections/${collectionId}`)}>
           Open
         </Button>
+        {(item?.userId === ME?.id || ME?.role === "ADMIN") && (
+          <Button
+            startIcon={<DeleteForeverIcon />}
+            onClick={async () => {
+              await deleteItem(item?.id ?? "");
+              refetch();
+            }}
+          >
+            Delete
+          </Button>
+        )}
       </CardActions>
     </Card>
   );
