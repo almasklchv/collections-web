@@ -36,6 +36,13 @@ export const collectionsApi = createApi({
         method: "DELETE",
       }),
     }),
+    addItemToCollection: build.mutation({
+      query: ({ id, item }) => ({
+        url: `/collections/${id}/add-item`,
+        method: "POST",
+        body: item,
+      }),
+    }),
   }),
 });
 
@@ -45,4 +52,5 @@ export const {
   useCreateCollectionMutation,
   useGetCollectionByIdQuery,
   useDeleteCollectionMutation,
+  useAddItemToCollectionMutation,
 } = collectionsApi;

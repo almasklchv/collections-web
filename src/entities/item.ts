@@ -6,4 +6,6 @@ export interface Item {
   title: string;
   tags: string[];
   collectionName: string;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  customFields: Record<string, any>;
 }

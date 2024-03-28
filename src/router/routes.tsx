@@ -1,12 +1,14 @@
 import { RouteObject } from "react-router-dom";
-import AuthLayout from "../pages/Auth/AuthLayout/auth-layout";
+import AuthLayout from "../layouts/AuthLayout/auth-layout";
 import SignUpPage from "../pages/Auth/SignUpPage";
 import SignInPage from "../pages/Auth/SignInPage";
 import HomePage from "../pages/HomePage";
 import MyPage from "../pages/Collections/MyPage";
-import CollectionsLayout from "../pages/Collections/CollectionsLayout";
+import CollectionsLayout from "../layouts/CollectionsLayout";
 import CollectionPage from "../pages/Collections/CollectionPage";
-import AppLayout from "../layouts/AppLayout";
+import AppLayout from "../layouts/AppLayout/AppLayout";
+import ItemsLayout from "../layouts/ItemsLayout";
+import ItemPage from "../pages/ItemPage";
 
 export const routes: RouteObject[] = [
   {
@@ -41,6 +43,16 @@ export const routes: RouteObject[] = [
           {
             path: ":id",
             element: <CollectionPage />,
+          },
+        ],
+      },
+      {
+        path: "items",
+        element: <ItemsLayout />,
+        children: [
+          {
+            path: ":id",
+            element: <ItemPage />,
           },
         ],
       },
