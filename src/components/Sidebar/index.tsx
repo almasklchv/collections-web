@@ -1,15 +1,17 @@
 import { Box, List, ListItemButton, ListItemText } from "@mui/material";
 import { useSignOutMutation } from "../../api/auth";
+import { useNavigate } from "react-router-dom";
 
 const Sidebar = () => {
   const paths = ["/", "/collections/my", "/auth/sign-in"];
   const [signOut] = useSignOutMutation();
+  const navigate = useNavigate();
 
   const handleListItemIndex = (
     _: React.MouseEvent<HTMLDivElement, MouseEvent>,
     index: number
   ) => {
-    window.location.href = paths[index];
+    navigate(paths[index]);
   };
 
   const handleSignOut = () => {
