@@ -1,0 +1,7 @@
+export enum CollectionType {
+  COINS = "COINS",
+  POSTCARDS = "POSTCARDS",
+  BANKNOTES = "BANKNOTES",
+  PAINTING = "PAINTING",
+  STAMPS = "STAMPS",
+}

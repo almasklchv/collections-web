@@ -1,7 +1,7 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { BASE_URL } from "../consts/base-url-api";
 import { User } from "../entities/user";
 import { getHeaders } from "../utils/get-headers";
+import { BASE_URL } from "../consts";
 
 export const authApi = createApi({
   reducerPath: "authApi",
@@ -24,6 +24,9 @@ export const authApi = createApi({
         body: post,
       }),
     }),
+    signOut: build.mutation({
+      query: () => "/auth/sign-out",
+    }),
     check: build.query({
       query: () => ({
         url: "/auth/check",
@@ -32,4 +35,9 @@ export const authApi = createApi({
   }),
 });
 
-export const { useSignUpMutation, useSignInMutation, useCheckQuery } = authApi;
+export const {
+  useSignUpMutation,
+  useSignInMutation,
+  useSignOutMutation,
+  useCheckQuery,
+} = authApi;

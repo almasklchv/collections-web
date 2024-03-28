@@ -12,8 +12,9 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { schema } from "../../../schemas/sign-in-schema";
 import { User } from "../../../entities/user";
 import { useSignInMutation } from "../../../api/auth";
-import { useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+import { useGetUserMutation } from "../../../api/users";
 
 const SignInPage = () => {
   const {
@@ -23,19 +24,27 @@ const SignInPage = () => {
   } = useForm({
     resolver: yupResolver(schema),
   });
-  const [signIn, result] = useSignInMutation();
-  const navigate = useNavigate();
+  const [signIn, signInResult] = useSignInMutation();
+  const [getUser, getUserResult] = useGetUserMutation();
+  const [email, setEmail] = useState<string>();
 
   const onSubmit: SubmitHandler<Partial<User>> = async (data) => {
     signIn(data);
-    // localStorage.setItem(accessToken, "token");
+    setEmail(data.email);
   };
 
   useEffect(() => {
-    if (result.data?.accessToken) {
-      localStorage.setItem("token", result.data.accessToken);
+    if (signInResult.data?.accessToken && email) {
+      localStorage.setItem("token", signInResult.data.accessToken);
+      getUser(email);
     }
-  }, [result, navigate]);
+  }, [signInResult]);
+
+  useEffect(() => {
+    localStorage.setItem("user", JSON.stringify(getUserResult.data));
+    if (signInResult.data?.accessToken && getUserResult.isSuccess)
+      window.location.href = "/";
+  }, [getUserResult]);
 
   return (
     <Box width={350}>

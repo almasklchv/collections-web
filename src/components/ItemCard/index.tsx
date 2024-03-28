@@ -1,18 +1,30 @@
-import { Button, Card, CardActions, CardContent, Skeleton, Typography } from "@mui/material";
+import {
+  Button,
+  Card,
+  CardActions,
+  CardContent,
+  Skeleton,
+  Typography,
+} from "@mui/material";
 import { Item } from "../../entities/item";
-import { useGetUserQuery } from "../../api/users";
+import { useGetUserMutation } from "../../api/users";
+import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
-const ItemCard = ({ title, tags, userId }: Item) => {
-  const { data: user, isLoading } = useGetUserQuery(userId);
+const ItemCard = ({ title, tags, userId, collectionId }: Item) => {
+  const [getUser, user] = useGetUserMutation();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (userId) getUser(userId);
+  }, []);
+
   return (
-    <Card
-      variant="outlined"
-      sx={{ maxWidth: 345, width: "100%", marginBottom: 5 }}
-    >
+    <Card variant="outlined" sx={{ maxWidth: 345, width: "100%" }}>
       <CardContent>
         <Typography color={"text-secondary"} gutterBottom>
-          {user?.name}
-          {isLoading && <Skeleton variant="text" />}
+          {user.data && user.data.name}
+          {user.isLoading && <Skeleton variant="text" />}
         </Typography>
         <Typography variant="h5">{title}</Typography>
         {tags.map((tag) => (
@@ -25,7 +37,9 @@ const ItemCard = ({ title, tags, userId }: Item) => {
         )}
       </CardContent>
       <CardActions>
-        <Button>Open Collection</Button>
+        <Button onClick={() => navigate(`/collections/${collectionId}`)}>
+          Open
+        </Button>
       </CardActions>
     </Card>
   );

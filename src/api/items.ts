@@ -1,5 +1,5 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { BASE_URL } from "../consts/base-url-api";
+import { BASE_URL } from "../consts/";
 import { getHeaders } from "../utils/get-headers";
 import { Item } from "../entities/item";
 
@@ -15,7 +15,11 @@ export const itemsApi = createApi({
         url: "/items/recent",
       }),
     }),
+    getItemsByCollectionId: build.query<Item[], string>({
+      query: (id: string) => `/items/get-all/${id}`,
+    }),
   }),
 });
 
-export const { useGetRecentlyAddedQuery } = itemsApi;
+export const { useGetRecentlyAddedQuery, useGetItemsByCollectionIdQuery } =
+  itemsApi;

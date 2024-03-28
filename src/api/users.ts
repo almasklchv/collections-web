@@ -1,5 +1,5 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { BASE_URL } from "../consts/base-url-api";
+import { BASE_URL } from "../consts/";
 import { getHeaders } from "../utils/get-headers";
 
 export const usersApi = createApi({
@@ -9,10 +9,13 @@ export const usersApi = createApi({
     prepareHeaders: getHeaders,
   }),
   endpoints: (build) => ({
-    getUser: build.query({
-      query: (id) => `/users/${id}`,
+    getUser: build.mutation({
+      query: (idOrEmail: string) => ({
+        url: `/users/${idOrEmail}`,
+        method: "GET",
+      }),
     }),
   }),
 });
 
-export const { useGetUserQuery } = usersApi;
+export const { useGetUserMutation } = usersApi;
