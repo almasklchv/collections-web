@@ -10,15 +10,18 @@ import "@fontsource/roboto/500.css";
 import "@fontsource/roboto/700.css";
 import Sidebar from "./components/Sidebar";
 import { Box } from "@mui/material";
-
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider/LocalizationProvider";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <Provider store={store}>
-      <Box>
-        <Sidebar />
-        <RouterProvider router={router} />
-      </Box>
+      <LocalizationProvider dateAdapter={AdapterDayjs}>
+        <Box>
+          <Sidebar />
+          <RouterProvider router={router} />
+        </Box>
+      </LocalizationProvider>
     </Provider>
   </React.StrictMode>
 );

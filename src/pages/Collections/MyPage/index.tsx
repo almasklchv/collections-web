@@ -15,11 +15,12 @@ import {
 } from "../../../api/collections";
 import CollectionCard from "../../../components/CollectionCard";
 import { ME, collectionTypes } from "../../../consts";
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { handleUpload } from "../../../utils/firebase";
 import { CollectionType } from "../../../entities/collection-type";
 import StepContent from "../../../components/StepContent";
 import { CustomFields } from "../../../entities/custom-field";
+import { Collection } from "../../../entities/collection";
 
 const steps = [
   "Select collection type",
@@ -36,7 +37,6 @@ const MyPage = () => {
   const imageInputRef = useRef(null);
   const [image, setImage] = useState<File>();
   const [uploadCollection] = useCreateCollectionMutation();
-  console.log(collections);
 
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [selectedIndex, setSelectedIndex] = useState(0);
@@ -83,10 +83,6 @@ const MyPage = () => {
     setCustomFields,
   };
 
-  useEffect(() => {
-    console.log(customFields);
-  }, [customFields]);
-
   const handleDone = async () => {
     setIsDisabled(true);
     const downloadUrl = await handleUpload(image);
@@ -132,7 +128,6 @@ const MyPage = () => {
       imageUrl: downloadUrl,
       ...customFieldsForDB,
     };
-    console.log(collection);
     await uploadCollection(collection);
     setIsOpen(false);
     refetch();
@@ -232,7 +227,7 @@ const MyPage = () => {
         </Box>
       </Modal>
       <Box sx={{ display: "flex", flexWrap: "wrap", gap: 3 }}>
-        {collections?.map((collection) => (
+        {collections?.map((collection: Collection) => (
           <CollectionCard {...collection} key={collection.id} variant="me" />
         ))}
         {isLoading && <Typography>Loading...</Typography>}

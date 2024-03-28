@@ -4,7 +4,9 @@ import {
   Box,
   Button,
   ButtonGroup,
+  Checkbox,
   Divider,
+  FormControlLabel,
   Modal,
   TextField,
   Typography,
@@ -13,18 +15,27 @@ import ItemCard from "../../../components/ItemCard";
 import { useGetCollectionByIdQuery } from "../../../api/collections";
 import { ME } from "../../../consts";
 import { Item } from "../../../entities/item";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ReplyIcon from "@mui/icons-material/Reply";
 import ChipsInput, { ChipData } from "../../../components/ChipsInput";
+import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
 
 const CollectionPage = () => {
   const { id } = useParams();
   const { data: collection } = useGetCollectionByIdQuery(id ?? "");
   const { data: items, isLoading } = useGetItemsByCollectionIdQuery(id ?? "");
   const navigate = useNavigate();
-
+  const [customFields, setCustomFields] = useState([]);
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [chipData, setChipData] = useState<ChipData[]>([]);
+
+  useEffect(() => {
+    for (const key in collection) {
+      if (key.startsWith("custom") && key.endsWith("name")) {
+        setCustomFields((prev) => ({ ...prev, [key]: collection[key] }));
+      }
+    }
+  }, [collection]);
 
   return (
     <Box>
@@ -61,6 +72,8 @@ const CollectionPage = () => {
             background: "#fff",
             width: "30%",
             padding: "20px",
+            maxHeight: "90vh",
+            overflowY: "auto",
           }}
         >
           <Typography variant="h6" sx={{ fontWeight: 400 }}>
@@ -80,7 +93,59 @@ const CollectionPage = () => {
             chipData={chipData}
             setChipData={setChipData}
           />
-
+          {Object.keys(customFields).map((key) => {
+            if (collection !== undefined) {
+              return (
+                <>
+                  {!key.startsWith("custom_boolean") && (
+                    <Typography
+                      variant="body2"
+                      sx={{ marginTop: 2, marginBottom: 1 }}
+                    >
+                      {collection[key]}
+                    </Typography>
+                  )}
+                  {key.startsWith("custom_string") && collection[key] && (
+                    <TextField
+                      fullWidth
+                      placeholder={`Enter ${collection[key].toLowerCase()}`}
+                    />
+                  )}
+                  {key.startsWith("custom_int") && collection[key] && (
+                    <TextField
+                      fullWidth
+                      placeholder={`Enter ${collection[key].toLowerCase()}`}
+                      type="number"
+                    />
+                  )}
+                  {key.startsWith("custom_text") && collection[key] && (
+                    <TextField
+                      multiline
+                      fullWidth
+                      minRows={6}
+                      maxRows={6}
+                      placeholder={`Enter ${collection[key].toLowerCase()}`}
+                    />
+                  )}
+                  {key.startsWith("custom_boolean") && collection[key] && (
+                    <FormControlLabel
+                      control={<Checkbox />}
+                      label={
+                        <Typography variant="body2" sx={{ fontSize: "14px" }}>
+                          {collection[key]}:
+                        </Typography>
+                      }
+                      labelPlacement="start"
+                      sx={{ marginLeft: 0 }}
+                    />
+                  )}
+                  {key.startsWith("custom_date") && collection[key] && (
+                    <DateTimePicker sx={{ width: "100%" }} />
+                  )}
+                </>
+              );
+            }
+          })}
           <Divider sx={{ marginTop: 5 }} />
           <Button
             variant="text"
