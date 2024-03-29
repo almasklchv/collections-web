@@ -4,23 +4,45 @@ import { RouterProvider } from "react-router-dom";
 import { router } from "./router";
 import { Provider } from "react-redux";
 import { store } from "./redux";
-import "@fontsource/roboto/300.css";
-import "@fontsource/roboto/400.css";
-import "@fontsource/roboto/500.css";
-import "@fontsource/roboto/700.css";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider/LocalizationProvider";
+import {
+  ThemeProvider as MUIThemeProvider,
+  createTheme,
+} from "@mui/material/styles";
+import CssBaseline from "@mui/material/CssBaseline";
+import { ThemeProvider, useTheme } from "./contexts/ThemeContext";
 import { BASE_URL } from "./consts";
 import io from "socket.io-client";
 
 export const socket = io(BASE_URL);
 
-ReactDOM.createRoot(document.getElementById("root")!).render(
+const root = ReactDOM.createRoot(document.getElementById("root")!);
+
+root.render(
   <React.StrictMode>
     <Provider store={store}>
       <LocalizationProvider dateAdapter={AdapterDayjs}>
-        <RouterProvider router={router} />
+        <ThemeProvider>
+          <MyApp />
+        </ThemeProvider>
       </LocalizationProvider>
     </Provider>
   </React.StrictMode>
 );
+
+function MyApp() {
+  const { theme } = useTheme();
+  const appliedTheme = createTheme({
+    palette: {
+      mode: theme,
+    },
+  });
+
+  return (
+    <MUIThemeProvider theme={appliedTheme}>
+      <CssBaseline />
+      <RouterProvider router={router} />
+    </MUIThemeProvider>
+  );
+}
