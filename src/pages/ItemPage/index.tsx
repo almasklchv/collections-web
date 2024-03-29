@@ -163,10 +163,10 @@ const ItemPage = () => {
             <Typography>{comment.user.name}</Typography>
             <Typography>{comment.text}</Typography>
 
-            {(comment.userId === ME.id || ME.role === "ADMIN") && (
+            {(comment.userId === ME?.id || ME?.role === "ADMIN") && (
               <Button
                 sx={{ position: "absolute", bottom: "25px", right: 0 }}
-                onClick={() => deleteComment(comment.id, ME.id, item?.id ?? "")}
+                onClick={() => deleteComment(comment.id, ME?.id, item?.id ?? "")}
               >
                 <DeleteIcon />
               </Button>
