@@ -10,6 +10,10 @@ import "@fontsource/roboto/500.css";
 import "@fontsource/roboto/700.css";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider/LocalizationProvider";
+import { BASE_URL } from "./consts";
+import io from "socket.io-client";
+
+export const socket = io(BASE_URL);
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
