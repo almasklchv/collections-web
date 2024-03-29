@@ -1,6 +1,6 @@
 // ThemeContext.js
 import { PaletteMode } from "@mui/material";
-import React, { ReactNode, createContext, useContext, useState } from "react";
+import { ReactNode, createContext, useContext, useState } from "react";
 
 const ThemeContext = createContext<{
   theme: PaletteMode;
