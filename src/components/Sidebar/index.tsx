@@ -1,11 +1,15 @@
-import { Box, List, ListItemButton, ListItemText } from "@mui/material";
+import { Box, Button, List, ListItemButton, ListItemText } from "@mui/material";
 import { useSignOutMutation } from "../../api/auth";
 import { useNavigate } from "react-router-dom";
+import { useTheme } from "../../contexts/ThemeContext";
+import DarkModeIcon from "@mui/icons-material/DarkMode";
+import LightModeIcon from "@mui/icons-material/LightMode";
 
 const Sidebar = () => {
   const paths = ["/", "/collections/my", "/auth/sign-in"];
   const [signOut] = useSignOutMutation();
   const navigate = useNavigate();
+  const { theme, toggleTheme } = useTheme();
 
   const handleListItemIndex = (
     _: React.MouseEvent<HTMLDivElement, MouseEvent>,
@@ -51,6 +55,15 @@ const Sidebar = () => {
             />
           )}
         </ListItemButton>
+        {theme === "light" ? (
+          <Button onClick={toggleTheme}>
+            <DarkModeIcon />
+          </Button>
+        ) : (
+          <Button onClick={toggleTheme}>
+            <LightModeIcon />
+          </Button>
+        )}
       </List>
     </Box>
   );
