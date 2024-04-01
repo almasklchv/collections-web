@@ -3,12 +3,14 @@ import ItemCard from "../../components/ItemCard";
 import { useGetRecentlyAddedQuery } from "../../api/items";
 import { useGetFiveBiggestCollectionsQuery } from "../../api/collections";
 import CollectionCard from "../../components/CollectionCard";
+import { useTranslation } from "react-i18next";
 
 const HomePage = () => {
   const { data: items, isLoading: isItemsLoading } =
     useGetRecentlyAddedQuery(null);
   const { data: collections, isLoading: isCollectionsLoading } =
     useGetFiveBiggestCollectionsQuery(null);
+  const { t } = useTranslation();
 
   return (
     <>
@@ -22,7 +24,7 @@ const HomePage = () => {
         }}
         variant="h5"
       >
-        Recently added items
+        {t("home.part1.title")}
       </Typography>
       <Box
         sx={{
@@ -30,14 +32,14 @@ const HomePage = () => {
           flexWrap: "wrap",
           padding: 15,
           marginLeft: 30,
-          gap: 3
+          gap: 3,
         }}
       >
         {items?.map((item) => (
           <ItemCard {...item} key={item.id} />
         ))}
         {!items?.length && !isItemsLoading && (
-          <Typography>No new items have been added in the last 24 hours.</Typography>
+          <Typography>{t("home.part1.noItems")}</Typography>
         )}
         {isItemsLoading && <Typography>Loading...</Typography>}
       </Box>
@@ -52,7 +54,7 @@ const HomePage = () => {
         }}
         variant="h5"
       >
-        Five biggest collections
+        {t("home.part2.title")}
       </Typography>
       <Box
         sx={{
@@ -60,14 +62,14 @@ const HomePage = () => {
           flexWrap: "wrap",
           padding: 15,
           marginLeft: 30,
-          gap: 3
+          gap: 3,
         }}
       >
         {collections?.map((collection) => (
           <CollectionCard {...collection} key={collection.id} />
         ))}
 
-        {isCollectionsLoading && <Typography>Loading...</Typography>}
+        {isCollectionsLoading && <Typography>{t("loader")}</Typography>}
       </Box>
     </>
   );

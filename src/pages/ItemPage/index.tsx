@@ -17,11 +17,11 @@ import { useGetItemByIdQuery } from "../../api/items";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import CommentIcon from "@mui/icons-material/Comment";
 import { useEffect, useState } from "react";
-
 import { ME } from "../../consts";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { Comment } from "../../entities/comment";
 import { socket } from "../../main";
+import { useTranslation } from "react-i18next";
 
 const ItemPage = () => {
   const { id } = useParams();
@@ -30,6 +30,8 @@ const ItemPage = () => {
   const [commentText, setCommentText] = useState<string>("");
   const [comments, setComments] = useState<Comment[]>([]);
   const [likesCount, setLikesCount] = useState(0);
+
+  const { t } = useTranslation();
 
   useEffect(() => {
     socket.on("likesUpdated", (data) => {
@@ -140,7 +142,7 @@ const ItemPage = () => {
         <TextField
           multiline
           maxRows={3}
-          placeholder="Leave a comment"
+          placeholder={t('itemPage.input')}
           sx={{ width: "85%" }}
           value={commentText}
           onChange={(e) => setCommentText(e.target.value)}
@@ -151,7 +153,7 @@ const ItemPage = () => {
           onClick={() => sendComment(item?.id ?? "", ME?.id, commentText)}
           disabled={!commentText}
         >
-          Add
+          {t('itemPage.button')}
         </Button>
       </Box>
       <Box sx={{ marginTop: 5 }}>
@@ -166,7 +168,9 @@ const ItemPage = () => {
             {(comment.userId === ME?.id || ME?.role === "ADMIN") && (
               <Button
                 sx={{ position: "absolute", bottom: "25px", right: 0 }}
-                onClick={() => deleteComment(comment.id, ME?.id, item?.id ?? "")}
+                onClick={() =>
+                  deleteComment(comment.id, ME?.id, item?.id ?? "")
+                }
               >
                 <DeleteIcon />
               </Button>

@@ -23,6 +23,7 @@ import { useEffect, useState } from "react";
 import ReplyIcon from "@mui/icons-material/Reply";
 import ChipsInput, { ChipData } from "../../../components/ChipsInput";
 import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
+import { useTranslation } from "react-i18next";
 
 const CollectionPage = () => {
   const { id } = useParams();
@@ -44,6 +45,8 @@ const CollectionPage = () => {
 
   const [titleError, setTittleError] = useState("");
   const [tagsError, setTagsError] = useState("");
+
+  const { t } = useTranslation();
 
   useEffect(() => {
     for (const key in collection) {
@@ -90,7 +93,7 @@ const CollectionPage = () => {
         </Button>
         {(collection?.userId === ME?.id || ME?.role === "ADMIN") && ME && (
           <Button variant="contained" onClick={() => setIsOpen(true)}>
-            Add Item
+            {t("collections.addItem")}
           </Button>
         )}
       </ButtonGroup>
@@ -101,7 +104,7 @@ const CollectionPage = () => {
       </Box>
       {isLoading && <Typography>Loading...</Typography>}
       {!items?.length && !isLoading && (
-        <Typography>This collection doesn't have items.</Typography>
+        <Typography>{t("collections.noItems")}</Typography>
       )}
       <Modal
         open={isOpen}
@@ -123,24 +126,24 @@ const CollectionPage = () => {
           }}
         >
           <Typography variant="h6" sx={{ fontWeight: 400 }}>
-            Describe item
+            {t("addItem.title")}
           </Typography>
           <Divider sx={{ marginTop: 1 }}></Divider>
           <Typography variant="body2" sx={{ marginTop: 2, marginBottom: 1 }}>
-            Title:
+            {t("addItem.titleInput.title")}:
           </Typography>
           <TextField
             fullWidth
-            placeholder="Title of item..."
+            placeholder={t("addItem.titleInput.placeholder")}
             onChange={(e) => setTitle(e.target.value)}
           />
           <FormHelperText error>{!title && titleError}</FormHelperText>
           <Typography variant="body2" sx={{ marginTop: 2, marginBottom: 1 }}>
-            Tags:
+            {t("addItem.tagsInput.title")}:
           </Typography>
           <ChipsInput
             fullWidth
-            placeholder="Enter a tag and press Enter..."
+            placeholder={t("addItem.tagsInput.placeholder")}
             chipData={chipData}
             setChipData={setChipData}
           />
@@ -228,7 +231,7 @@ const CollectionPage = () => {
             sx={{ marginTop: 1 }}
             onClick={() => setIsOpen(false)}
           >
-            Cancel
+            {t('addItem.cancel')}
           </Button>
           <Button
             variant="contained"
@@ -236,7 +239,7 @@ const CollectionPage = () => {
             onClick={handleDone}
             disabled={isDisabled}
           >
-            Done
+            {t('addItem.done')}
           </Button>
         </Box>
       </Modal>
