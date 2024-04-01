@@ -14,6 +14,7 @@ import CssBaseline from "@mui/material/CssBaseline";
 import { ThemeProvider, useTheme } from "./contexts/ThemeContext";
 import { BASE_URL } from "./consts";
 import io from "socket.io-client";
+import "./utils/i18n";
 
 export const socket = io(BASE_URL);
 

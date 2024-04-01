@@ -17,6 +17,7 @@ import { CustomFieldsType } from "../../entities/custom-field-type";
 import CustomField from "../CustomField";
 import { CustomFields } from "../../entities/custom-field";
 import MDEditor from "@uiw/react-md-editor";
+import { useTranslation } from "react-i18next";
 
 interface CollectionTypeImages {
   coins: string;
@@ -61,6 +62,8 @@ const StepContent = (props: StepContentProps) => {
       text: 0,
     }
   );
+
+  const { t } = useTranslation();
 
   const [selectedCustomField, setSelectedCustomField] =
     useState<keyof CustomFieldsCount>("datetime");
@@ -124,14 +127,17 @@ const StepContent = (props: StepContentProps) => {
         <>
           <Box sx={{ marginTop: 3 }}>
             <Typography variant="body2">
-              Collection type: {props.selectedCollectionType}
+              {t("collections.addCollection.collectionType")}:{" "}
+              {props.selectedCollectionType}
             </Typography>
             <Typography variant="body2" sx={{ marginTop: 2, marginBottom: 1 }}>
-              Title:
+              {t("collections.addCollection.titleInput.title")}:
             </Typography>
             <TextField
               variant="outlined"
-              placeholder="Enter collection title here"
+              placeholder={t(
+                "collections.addCollection.titleInput.placeholder"
+              )}
               fullWidth
               value={props.collectionTitle}
               onChange={(e) => props.setCollectionTitle(e.target.value)}
@@ -140,7 +146,7 @@ const StepContent = (props: StepContentProps) => {
               {!props.collectionTitle && props.collectionTitleError}
             </FormHelperText>
             <Typography variant="body2" sx={{ marginTop: 2, marginBottom: 1 }}>
-              Description:
+              {t("collections.addCollection.descriptionInput.title")}:
             </Typography>
             <MDEditor
               value={props.collectionDescription}
@@ -150,14 +156,14 @@ const StepContent = (props: StepContentProps) => {
               {!props.collectionDescription && props.collectionDescriptionError}
             </FormHelperText>
             <Typography variant="body2" sx={{ marginTop: 2, marginBottom: 1 }}>
-              Image:
+              {t("collections.addCollection.imageInput")}:
             </Typography>
             <Button
               component="label"
               variant="contained"
               startIcon={<CloudUploadIcon />}
             >
-              Upload image
+              {t("collections.addCollection.imageButton")}
               <VisuallyHiddenInput
                 type="file"
                 accept=".png,.jpg,.jpeg"
@@ -185,7 +191,7 @@ const StepContent = (props: StepContentProps) => {
             })}
 
             <Typography variant="body2" sx={{ marginTop: 2, marginBottom: 1 }}>
-              New custom field:
+              {t("collections.addCollection.newCustomField.text")}:
             </Typography>
             <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
               <Select
@@ -233,7 +239,7 @@ const StepContent = (props: StepContentProps) => {
                 variant="contained"
                 sx={{ width: "30%", height: "100%" }}
               >
-                Add
+                {t("collections.addCollection.newCustomField.button")}
               </Button>
             </Box>
           </Box>

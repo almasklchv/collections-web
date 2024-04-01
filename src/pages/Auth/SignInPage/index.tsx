@@ -15,6 +15,7 @@ import { useSignInMutation } from "../../../api/auth";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useGetUserMutation } from "../../../api/users";
+import { useTranslation } from "react-i18next";
 
 const SignInPage = () => {
   const {
@@ -29,6 +30,8 @@ const SignInPage = () => {
   const [email, setEmail] = useState<string>();
   const [signInError, setSignInError] = useState("");
 
+  const { t } = useTranslation();
+
   const onSubmit: SubmitHandler<Partial<User>> = async (data) => {
     signIn(data);
     setEmail(data.email);
@@ -36,7 +39,7 @@ const SignInPage = () => {
 
   useEffect(() => {
     if (signInResult.error) {
-      setSignInError("Invalid credentials.");
+      setSignInError(t("signIn.error"));
     }
 
     if (signInResult.data?.accessToken && email) {
@@ -70,7 +73,9 @@ const SignInPage = () => {
         </FormControl>
 
         <FormControl sx={{ marginTop: 2 }}>
-          <InputLabel htmlFor="email">Password</InputLabel>
+          <InputLabel htmlFor="password">
+            {t("signIn.passwordInput")}
+          </InputLabel>
           <Input
             {...register("password")}
             type="password"
@@ -83,13 +88,14 @@ const SignInPage = () => {
         </FormControl>
 
         <Button variant="contained" type="submit" sx={{ marginTop: 5 }}>
-          Sign In
+          {t("signIn.button")}
         </Button>
         <Typography
           variant="caption"
           sx={{ margin: "0 auto", marginTop: "15px" }}
         >
-          Don't have an account? <Link to={"/auth/sign-up"}>Create</Link>
+          {t("signIn.noAccount.part1")}{" "}
+          <Link to={"/auth/sign-up"}>{t("signIn.noAccount.part2")}</Link>
         </Typography>
       </form>
     </Box>

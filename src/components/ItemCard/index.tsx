@@ -17,6 +17,7 @@ import {
 } from "../../api/items";
 import { ME } from "../../consts";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
+import { useTranslation } from "react-i18next";
 
 const ItemCard = ({ title, tags, userId, collectionId, id }: Item) => {
   const [getUser, user] = useGetUserMutation();
@@ -24,6 +25,8 @@ const ItemCard = ({ title, tags, userId, collectionId, id }: Item) => {
   const [deleteItem] = useDeleteItemMutation();
   const { refetch } = useGetItemsByCollectionIdQuery(collectionId ?? "");
   const navigate = useNavigate();
+
+  const { t } = useTranslation();
 
   useEffect(() => {
     if (userId) getUser(userId);
@@ -45,12 +48,14 @@ const ItemCard = ({ title, tags, userId, collectionId, id }: Item) => {
         ))}
         {!tags.length && (
           <Typography variant="body2" sx={{ marginTop: 2 }}>
-            No tags
+            {t('itemCard.noTags')}
           </Typography>
         )}
       </CardContent>
       <CardActions sx={{ bottom: -5, position: "absolute" }}>
-        <Button onClick={() => navigate(`/items/${id}`)}>Open</Button>
+        <Button onClick={() => navigate(`/items/${id}`)}>
+          {t("itemCard.open")}
+        </Button>
         {(item?.userId === ME?.id || ME?.role === "ADMIN") && (
           <Button
             startIcon={<DeleteForeverIcon />}
@@ -59,7 +64,7 @@ const ItemCard = ({ title, tags, userId, collectionId, id }: Item) => {
               refetch();
             }}
           >
-            Delete
+            {t("itemCard.delete")}
           </Button>
         )}
       </CardActions>
