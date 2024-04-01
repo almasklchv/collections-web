@@ -14,11 +14,14 @@ import { User } from "../../../entities/user";
 import { useSignUpMutation } from "../../../api/auth";
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 const SignUpPage = () => {
   const [signUp, result] = useSignUpMutation();
   const navigate = useNavigate();
   const [signUpError, setSignUpError] = useState("");
+
+  const { t } = useTranslation();
 
   const {
     register,
@@ -54,7 +57,7 @@ const SignUpPage = () => {
         onSubmit={handleSubmit(onSubmit)}
       >
         <FormControl>
-          <InputLabel htmlFor="name">Full Name</InputLabel>
+          <InputLabel htmlFor="name">{t("signUp.nameInput")}</InputLabel>
           <Input
             {...register("name")}
             type="text"
@@ -78,7 +81,9 @@ const SignUpPage = () => {
         </FormControl>
 
         <FormControl sx={{ marginTop: 2 }}>
-          <InputLabel htmlFor="email">Password</InputLabel>
+          <InputLabel htmlFor="password">
+            {t("signUp.passwordInput")}
+          </InputLabel>
           <Input
             {...register("password")}
             type="password"
@@ -89,7 +94,9 @@ const SignUpPage = () => {
         </FormControl>
 
         <FormControl sx={{ marginTop: 2 }}>
-          <InputLabel htmlFor="email">Confirm Password</InputLabel>
+          <InputLabel htmlFor="confirmPassword">
+            {t("signUp.confirmPasswordInput")}
+          </InputLabel>
           <Input
             {...register("confirmPassword")}
             type="password"
@@ -102,13 +109,14 @@ const SignUpPage = () => {
         </FormControl>
 
         <Button variant="contained" type="submit" sx={{ marginTop: 5 }}>
-          Sign Up
+          {t("signUp.button")}
         </Button>
         <Typography
           variant="caption"
           sx={{ margin: "0 auto", marginTop: "15px" }}
         >
-          Already have an account? <Link to={"/auth/sign-in"}>Sign in</Link>
+          {t("signUp.haveAccount.part1")}{" "}
+          <Link to={"/auth/sign-in"}>{t("signUp.haveAccount.part2")}</Link>
         </Typography>
       </form>
     </Box>

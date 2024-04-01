@@ -19,6 +19,7 @@ import {
 } from "../../api/collections";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import MDEditor from "@uiw/react-md-editor";
+import { useTranslation } from "react-i18next";
 
 const CollectionCard = ({
   userId,
@@ -36,6 +37,8 @@ const CollectionCard = ({
 
   const { refetch } = useGetCollectionsByUserIdQuery(userId ?? "");
 
+  const { t } = useTranslation();
+
   useEffect(() => {
     if (userId) getUser(userId);
   }, []);
@@ -49,10 +52,10 @@ const CollectionCard = ({
       sx={{ maxWidth: 345, width: "100%", position: "relative" }}
     >
       <CardMedia sx={{ height: 170 }} image={imageUrl ?? NO_IMAGE} />
-      <CardContent sx={{marginBottom: 4}}>
+      <CardContent sx={{ marginBottom: 4 }}>
         <Typography color={"text-secondary"} gutterBottom>
           {user.data && variant !== "me" && user.data.name}
-          {variant === "me" && "You"}
+          {variant === "me" && t("collectionCard.you")}
           {user.isLoading && variant !== "me" && <Skeleton variant="text" />}
         </Typography>
         <Typography variant="h5">{title}</Typography>
@@ -63,7 +66,7 @@ const CollectionCard = ({
         <Typography variant="overline">{theme}</Typography>
       </CardContent>
       <CardActions sx={{ position: "absolute", bottom: 0 }}>
-        <Button onClick={handleClick}>Open Collection</Button>
+        <Button onClick={handleClick}>{t("collectionCard.open")}</Button>
         {(collection?.userId === ME?.id || ME?.role === "ADMIN") && (
           <Button
             startIcon={<DeleteForeverIcon />}
@@ -72,7 +75,7 @@ const CollectionCard = ({
               refetch();
             }}
           >
-            Delete
+            {t("collectionCard.delete")}
           </Button>
         )}
       </CardActions>

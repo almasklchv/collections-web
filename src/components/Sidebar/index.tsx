@@ -4,12 +4,15 @@ import { useNavigate } from "react-router-dom";
 import { useTheme } from "../../contexts/ThemeContext";
 import DarkModeIcon from "@mui/icons-material/DarkMode";
 import LightModeIcon from "@mui/icons-material/LightMode";
+import LanguageIcon from "@mui/icons-material/Language";
+import { useTranslation } from "react-i18next";
 
 const Sidebar = () => {
   const paths = ["/", "/collections/my", "/auth/sign-in"];
   const [signOut] = useSignOutMutation();
   const navigate = useNavigate();
   const { theme, toggleTheme } = useTheme();
+  const { t, i18n } = useTranslation();
 
   const handleListItemIndex = (
     _: React.MouseEvent<HTMLDivElement, MouseEvent>,
@@ -24,6 +27,13 @@ const Sidebar = () => {
     localStorage.removeItem("user");
   };
 
+  const toggleLanguage = () => {
+    const currentLanguage = i18n.language;
+    const nextLanguage =
+      currentLanguage === "ru" ? "kk" : currentLanguage === "kk" ? "en" : "ru";
+    i18n.changeLanguage(nextLanguage);
+  };
+
   return (
     <Box
       sx={{ position: "absolute" }}
@@ -36,34 +46,36 @@ const Sidebar = () => {
           selected={window.location.href.slice(21) === paths[0]}
           onClick={(e) => handleListItemIndex(e, 0)}
         >
-          <ListItemText primary="Home" />
+          <ListItemText primary={t("sidebar.home")} />
         </ListItemButton>
         <ListItemButton
           selected={window.location.href.slice(21) === paths[1]}
           onClick={(e) => handleListItemIndex(e, 1)}
         >
-          <ListItemText primary="My collections" />
+          <ListItemText primary={t("sidebar.myCollections")} />
         </ListItemButton>
         <ListItemButton onClick={(e) => handleListItemIndex(e, 2)}>
           {localStorage.getItem("token") && (
-            <ListItemText primary="Sign Out" onClick={handleSignOut} />
+            <ListItemText
+              primary={t("sidebar.signOut")}
+              onClick={handleSignOut}
+            />
           )}
           {!localStorage.getItem("token") && (
             <ListItemText
-              primary="Sign In"
+              primary={t("sidebar.signIn")}
               onClick={() => navigate("/auth/sign-in")}
             />
           )}
         </ListItemButton>
-        {theme === "light" ? (
+        <Box>
           <Button onClick={toggleTheme}>
-            <DarkModeIcon />
+            {theme === "light" ? <DarkModeIcon /> : <LightModeIcon />}
           </Button>
-        ) : (
-          <Button onClick={toggleTheme}>
-            <LightModeIcon />
+          <Button onClick={toggleLanguage} startIcon={<LanguageIcon />}>
+            {i18n.language.toUpperCase()}
           </Button>
-        )}
+        </Box>
       </List>
     </Box>
   );

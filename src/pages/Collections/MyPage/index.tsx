@@ -22,12 +22,7 @@ import StepContent from "../../../components/StepContent";
 import { CustomFields } from "../../../entities/custom-field";
 import { Collection } from "../../../entities/collection";
 import { useNavigate } from "react-router-dom";
-
-const steps = [
-  "Select collection type",
-  "Describe the new collection",
-  "Add custom fields to items (optional)",
-];
+import { useTranslation } from "react-i18next";
 
 const MyPage = () => {
   const navigate = useNavigate();
@@ -60,11 +55,21 @@ const MyPage = () => {
   const [collectionDescriptionError, setCollectionDescriptionError] =
     useState("");
 
+  const { t } = useTranslation();
+
+  const steps = [
+    t("collections.addCollection.steps.step1"),
+    t("collections.addCollection.steps.step2"),
+    t("collections.addCollection.steps.step3"),
+  ];
+
   const handleNext = () => {
     if (!collectionTitle && activeStep !== 0) {
-      setCollectionTitleError("Enter title of collection.");
-    } else if (!collectionDescription   && activeStep !== 0) {
-      setCollectionDescriptionError("Enter description of collection.");
+      setCollectionTitleError(t("collections.addCollection.titleInput.error"));
+    } else if (!collectionDescription && activeStep !== 0) {
+      setCollectionDescriptionError(
+        t("collections.addCollection.descriptionInput.error")
+      );
     } else {
       setActiveStep((prevActiveStep) => prevActiveStep + 1);
     }
@@ -154,13 +159,13 @@ const MyPage = () => {
   ) {
     return (
       <>
-        <Typography>You must be logged in to view your collections.</Typography>
+        <Typography>{t("collections.my.notLogged")}</Typography>
         <Button
           variant="contained"
           onClick={() => navigate("/auth/sign-in")}
           sx={{ marginTop: 3 }}
         >
-          Sign In
+          {t("collections.my.button1")}
         </Button>
       </>
     );
@@ -173,7 +178,7 @@ const MyPage = () => {
         sx={{ marginBottom: 3 }}
         onClick={() => setIsOpen(true)}
       >
-        Add collection
+        {t("collections.my.button2")}
       </Button>
       <Modal
         open={isOpen}
@@ -215,17 +220,17 @@ const MyPage = () => {
           >
             {activeStep === 0 && (
               <Button variant="text" onClick={() => setIsOpen(false)}>
-                Cancel
+                {t("collections.addCollection.buttons.cancel")}
               </Button>
             )}
             {activeStep > 0 && (
               <Button variant="text" onClick={handleBack}>
-                Previous
+                {t("collections.addCollection.buttons.previous")}
               </Button>
             )}
             {activeStep < steps.length - 1 && (
               <Button variant="contained" onClick={handleNext}>
-                Next
+                {t("collections.addCollection.buttons.next")}
               </Button>
             )}
             {activeStep === steps.length - 1 && (
@@ -234,7 +239,7 @@ const MyPage = () => {
                 onClick={handleDone}
                 disabled={isDisabled}
               >
-                Done
+                {t("collections.addCollection.buttons.done")}
               </Button>
             )}
           </ButtonGroup>
@@ -244,7 +249,7 @@ const MyPage = () => {
         {collections?.map((collection: Collection) => (
           <CollectionCard {...collection} key={collection.id} variant="me" />
         ))}
-        {isLoading && <Typography>Loading...</Typography>}
+        {isLoading && <Typography>{t("loader")}</Typography>}
       </Box>
     </Box>
   );
