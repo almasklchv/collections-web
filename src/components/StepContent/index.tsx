@@ -102,7 +102,15 @@ const StepContent = (props: StepContentProps) => {
     case 0:
       return (
         <>
-          <Box sx={{ display: "flex", flexWrap: "wrap", gap: 2, marginTop: 5 }}>
+          <Box
+            sx={{
+              display: "flex",
+              flexWrap: "wrap",
+              gap: 2,
+              marginTop: 5,
+              justifyContent: "center",
+            }}
+          >
             {collectionTypes.map((type: string, index: number) => {
               return (
                 <MiniCard

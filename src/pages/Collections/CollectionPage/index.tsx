@@ -11,6 +11,8 @@ import {
   Modal,
   TextField,
   Typography,
+  useMediaQuery,
+  useTheme,
 } from "@mui/material";
 import ItemCard from "../../../components/ItemCard";
 import {
@@ -47,6 +49,9 @@ const CollectionPage = () => {
   const [tagsError, setTagsError] = useState("");
 
   const { t } = useTranslation();
+
+  const theme = useTheme();
+  const isMdUp = useMediaQuery(theme.breakpoints.up("md"));
 
   useEffect(() => {
     for (const key in collection) {
@@ -108,22 +113,42 @@ const CollectionPage = () => {
       )}
       <Modal
         open={isOpen}
-        sx={{
-          display: "flex",
-          height: "100vh",
-          justifyContent: "center",
-          alignItems: "center",
-        }}
+        sx={
+          isMdUp
+            ? {
+                display: "flex",
+                height: "100vh",
+                justifyContent: "center",
+                alignItems: "center",
+              }
+            : {
+                display: "flex",
+                height: "100vh",
+                width: "100vw",
+                justifyContent: "center",
+                alignItems: "center",
+              }
+        }
         onClose={() => setIsOpen(false)}
       >
         <Box
-          sx={{
-            background: "#fff",
-            width: "30%",
-            padding: "20px",
-            maxHeight: "90vh",
-            overflowY: "auto",
-          }}
+          sx={
+            isMdUp
+              ? {
+                  background: "#fff",
+                  width: "30%",
+                  padding: "20px",
+                  maxHeight: "90vh",
+                  overflowY: "auto",
+                }
+              : {
+                  background: "#fff",
+                  width: "100%",
+                  padding: "20px",
+                  height: "100vh",
+                  overflowY: "auto",
+                }
+          }
         >
           <Typography variant="h6" sx={{ fontWeight: 400 }}>
             {t("addItem.title")}
@@ -225,22 +250,30 @@ const CollectionPage = () => {
               );
             }
           })}
-          <Divider sx={{ marginTop: 5 }} />
-          <Button
-            variant="text"
-            sx={{ marginTop: 1 }}
-            onClick={() => setIsOpen(false)}
+          <Box
+            sx={
+              isMdUp
+                ? { marginTop: 5 }
+                : { width: "97%", position: "fixed", bottom: 5, left: 6 }
+            }
           >
-            {t('addItem.cancel')}
-          </Button>
-          <Button
-            variant="contained"
-            sx={{ float: "right", marginTop: 1 }}
-            onClick={handleDone}
-            disabled={isDisabled}
-          >
-            {t('addItem.done')}
-          </Button>
+            <Divider />
+            <Button
+              variant="text"
+              sx={{ marginTop: 1 }}
+              onClick={() => setIsOpen(false)}
+            >
+              {t("addItem.cancel")}
+            </Button>
+            <Button
+              variant="contained"
+              sx={{ float: "right", marginTop: 1 }}
+              onClick={handleDone}
+              disabled={isDisabled}
+            >
+              {t("addItem.done")}
+            </Button>
+          </Box>
         </Box>
       </Modal>
     </Box>

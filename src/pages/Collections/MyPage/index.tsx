@@ -8,6 +8,8 @@ import {
   StepLabel,
   Stepper,
   Typography,
+  useMediaQuery,
+  useTheme,
 } from "@mui/material";
 import {
   useCreateCollectionMutation,
@@ -56,6 +58,9 @@ const MyPage = () => {
     useState("");
 
   const { t } = useTranslation();
+
+  const theme = useTheme();
+  const isMdUp = useMediaQuery(theme.breakpoints.up("md"));
 
   const steps = [
     t("collections.addCollection.steps.step1"),
@@ -191,13 +196,23 @@ const MyPage = () => {
         }}
       >
         <Box
-          sx={{
-            background: "#fff",
-            width: "30%",
-            padding: "20px",
-            maxHeight: "90vh",
-            overflowY: "auto",
-          }}
+          sx={
+            isMdUp
+              ? {
+                  background: "#fff",
+                  width: "30%",
+                  padding: "20px",
+                  maxHeight: "90vh",
+                  overflowY: "auto",
+                }
+              : {
+                  background: "#fff",
+                  width: "100%",
+                  height: "100vh",
+                  padding: "20px",
+                  overflowY: "auto",
+                }
+          }
         >
           <Stepper activeStep={activeStep}>
             {steps.map((label) => (
@@ -208,41 +223,55 @@ const MyPage = () => {
           </Stepper>
           <Divider sx={{ marginTop: 2 }} />
           <StepContent {...stepContentProps} />
-          <Divider sx={{ marginTop: 5 }} />
-          <ButtonGroup
-            sx={{
-              float: "right",
-              marginTop: 1,
-              display: "flex",
-              alignItems: "center",
-              gap: 1,
-            }}
+          <Box
+            sx={
+              isMdUp
+                ? { marginTop: 5 }
+                : {
+                    width: "97%",
+                    position: "fixed",
+                    bottom: 5,
+                    left: 6,
+                    background: "#fff",
+                  }
+            }
           >
-            {activeStep === 0 && (
-              <Button variant="text" onClick={() => setIsOpen(false)}>
-                {t("collections.addCollection.buttons.cancel")}
-              </Button>
-            )}
-            {activeStep > 0 && (
-              <Button variant="text" onClick={handleBack}>
-                {t("collections.addCollection.buttons.previous")}
-              </Button>
-            )}
-            {activeStep < steps.length - 1 && (
-              <Button variant="contained" onClick={handleNext}>
-                {t("collections.addCollection.buttons.next")}
-              </Button>
-            )}
-            {activeStep === steps.length - 1 && (
-              <Button
-                variant="contained"
-                onClick={handleDone}
-                disabled={isDisabled}
-              >
-                {t("collections.addCollection.buttons.done")}
-              </Button>
-            )}
-          </ButtonGroup>
+            <Divider />
+            <ButtonGroup
+              sx={{
+                float: "right",
+                marginTop: 1,
+                display: "flex",
+                alignItems: "center",
+                gap: 1,
+              }}
+            >
+              {activeStep === 0 && (
+                <Button variant="text" onClick={() => setIsOpen(false)}>
+                  {t("collections.addCollection.buttons.cancel")}
+                </Button>
+              )}
+              {activeStep > 0 && (
+                <Button variant="text" onClick={handleBack}>
+                  {t("collections.addCollection.buttons.previous")}
+                </Button>
+              )}
+              {activeStep < steps.length - 1 && (
+                <Button variant="contained" onClick={handleNext}>
+                  {t("collections.addCollection.buttons.next")}
+                </Button>
+              )}
+              {activeStep === steps.length - 1 && (
+                <Button
+                  variant="contained"
+                  onClick={handleDone}
+                  disabled={isDisabled}
+                >
+                  {t("collections.addCollection.buttons.done")}
+                </Button>
+              )}
+            </ButtonGroup>
+          </Box>
         </Box>
       </Modal>
       <Box sx={{ display: "flex", flexWrap: "wrap", gap: 3 }}>
